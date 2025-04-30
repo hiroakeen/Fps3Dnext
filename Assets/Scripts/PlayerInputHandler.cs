@@ -11,6 +11,8 @@ public class PlayerInputHandler : MonoBehaviour
     public bool IsRightClickDown { get; private set; }
     public bool IsLeftClickDown { get; private set; }
 
+    public bool IsAiming => IsRightClickHeld;
+
     private void Awake()
     {
         input = GetComponent<PlayerInput>();

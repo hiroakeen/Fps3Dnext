@@ -5,27 +5,50 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float footstepInterval = 1f;
 
-    private PlayerAudio audioPlayer;
     private CharacterController controller;
-    private PlayerInput input;
+    private PlayerAudio audioPlayer;
+    private PlayerInputHandler inputHandler;
+    private PlayerAnimation playerAnimation; 
+    private float footstepTimer = 0f;
 
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
-        input = GetComponent<PlayerInput>();
         audioPlayer = GetComponent<PlayerAudio>();
+        inputHandler = GetComponent<PlayerInputHandler>();
+        playerAnimation = GetComponent<PlayerAnimation>(); 
     }
 
     void Update()
     {
-        Vector2 moveInput = input.actions["Move"].ReadValue<Vector2>();
+        if (inputHandler.IsAiming)
+        {
+            footstepTimer = 0f;
+            playerAnimation.SetMoveSpeed(0f);
+            return; // \‚¦’†‚ÍˆÚ“®•s‰Â
+        }
+
+        Vector2 moveInput = inputHandler.MoveInput;
         Vector3 move = transform.forward * moveInput.y + transform.right * moveInput.x;
         controller.Move(move * moveSpeed * Time.deltaTime);
 
+        float currentSpeed = move.magnitude;
+        playerAnimation.SetMoveSpeed(currentSpeed);
+
         if (move != Vector3.zero)
         {
-            audioPlayer.PlayFootstep();  // ‘«‰¹
+            footstepTimer += Time.deltaTime;
+            if (footstepTimer >= footstepInterval)
+            {
+                audioPlayer.PlayFootstep();
+                footstepTimer = 0f;
+            }
+        }
+        else
+        {
+            footstepTimer = 0f;
         }
     }
 }
