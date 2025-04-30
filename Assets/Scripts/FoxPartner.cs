@@ -20,9 +20,6 @@ public class FoxPartner : MonoBehaviour
     private float idleTimer = 0f;
     private bool hasStartedGuiding = false;
 
-    private enum FoxState { Idle, Walk, Run }
-    private FoxState currentState = FoxState.Idle;
-
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -31,6 +28,9 @@ public class FoxPartner : MonoBehaviour
 
     private void Update()
     {
+        // Animator に速度を反映（ブレンドツリー用）
+        animator.SetFloat("MoveSpeed", agent.velocity.magnitude);
+
         nearestAnimal = FindNearestAnimal();
 
         if (!hasStartedGuiding && nearestAnimal != null)
@@ -42,7 +42,7 @@ public class FoxPartner : MonoBehaviour
             }
             else
             {
-                SetState(FoxState.Idle);
+                agent.ResetPath();
                 return;
             }
         }
@@ -77,17 +77,14 @@ public class FoxPartner : MonoBehaviour
 
             if (distanceToAnimal > runThreshold)
             {
-                SetState(FoxState.Run);
                 agent.speed = 6f;
             }
             else if (distanceToAnimal > walkThreshold)
             {
-                SetState(FoxState.Walk);
                 agent.speed = 3f;
             }
             else
             {
-                SetState(FoxState.Idle);
                 agent.ResetPath();
                 return;
             }
@@ -102,12 +99,11 @@ public class FoxPartner : MonoBehaviour
         if (distance > followDistance)
         {
             agent.SetDestination(player.position);
-            SetState(FoxState.Walk);
+            agent.speed = 3f;
         }
         else
         {
             agent.ResetPath();
-            SetState(FoxState.Idle);
         }
     }
 
@@ -117,11 +113,10 @@ public class FoxPartner : MonoBehaviour
         Vector3 offset = new Vector3(Mathf.Cos(orbitAngle), 0, Mathf.Sin(orbitAngle)) * orbitDistance;
         Vector3 orbitTarget = nearestAnimal.position + offset;
 
-        NavMeshHit hit;
-        if (NavMesh.SamplePosition(orbitTarget, out hit, 2f, NavMesh.AllAreas))
+        if (NavMesh.SamplePosition(orbitTarget, out var hit, 2f, NavMesh.AllAreas))
         {
             agent.SetDestination(hit.position);
-            SetState(FoxState.Walk);
+            agent.speed = 2f;
         }
     }
 
@@ -131,11 +126,10 @@ public class FoxPartner : MonoBehaviour
         Vector3 offset = new Vector3(Mathf.Cos(orbitAngle), 0, Mathf.Sin(orbitAngle)) * followDistance;
         Vector3 orbitTarget = player.position + offset;
 
-        NavMeshHit hit;
-        if (NavMesh.SamplePosition(orbitTarget, out hit, 2f, NavMesh.AllAreas))
+        if (NavMesh.SamplePosition(orbitTarget, out var hit, 2f, NavMesh.AllAreas))
         {
             agent.SetDestination(hit.position);
-            SetState(FoxState.Walk);
+            agent.speed = 2f;
         }
     }
 
@@ -155,24 +149,5 @@ public class FoxPartner : MonoBehaviour
             }
         }
         return closest;
-    }
-
-    private void SetState(FoxState newState)
-    {
-        if (currentState == newState) return;
-        currentState = newState;
-
-        switch (newState)
-        {
-            case FoxState.Idle:
-                animator.SetTrigger("Idle");
-                break;
-            case FoxState.Walk:
-                animator.SetTrigger("Walk");
-                break;
-            case FoxState.Run:
-                animator.SetTrigger("Run");
-                break;
-        }
     }
 }

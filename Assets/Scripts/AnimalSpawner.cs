@@ -6,7 +6,7 @@ public class AnimalSpawnData
 {
     public GameObject prefab;
     public float spawnWeight = 1f;
-    public bool uniqueSpawn = false; // ƒgƒ‰‚¾‚¯ true ‚É‚·‚é
+    public bool uniqueSpawn = false;
 }
 
 public class AnimalSpawner : MonoBehaviour
@@ -45,11 +45,7 @@ public class AnimalSpawner : MonoBehaviour
         {
             GameObject instance = Instantiate(selectedData.prefab, hit.position, point.rotation);
 
-            if (selectedData.uniqueSpawn)
-            {
-                currentTigerInstance = instance;
-                instance.AddComponent<TigerTracker>().Init(() => currentTigerInstance = null);
-            }
+           
         }
         else
         {
