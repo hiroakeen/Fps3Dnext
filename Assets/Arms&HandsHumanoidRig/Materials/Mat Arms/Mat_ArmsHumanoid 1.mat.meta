@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 0d5ad8a914572ff4bb4517891e897f87
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 107751
+  packageName: Arms&HandsHumanoidRig
+  packageVersion: 2.5
+  assetPath: Assets/Arms&HandsHumanoidRig/Materials/Mat Arms/Mat_ArmsHumanoid 1.mat
+  uploadId: 600100
