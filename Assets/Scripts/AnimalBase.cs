@@ -82,7 +82,28 @@ public abstract class AnimalBase : MonoBehaviour, IAnimalBehavior
 
     public virtual void OnHit()
     {
-        Debug.Log($"{gameObject.name} was hit!");
-        // 任意で死亡アニメーションやラグドール化など
+        if (animator != null)
+        {
+            animator.SetTrigger("Die"); // AnyState → Death に遷移
+        }
+
+        if (agent != null && agent.isOnNavMesh)
+        {
+            agent.isStopped = true;
+            agent.ResetPath();
+        }
+
+        // 物理・当たり判定など無効化
+        Collider collider = GetComponent<Collider>();
+        if (collider != null)
+        {
+            collider.enabled = false;
+        }
+
+        // 死亡後にオブジェクトを削除
+        Destroy(gameObject, 2f);
+
+        Debug.Log($"{gameObject.name} was hit and is dying.");
     }
+
 }
