@@ -4,13 +4,18 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 5f;
+    [Header("Movement Settings")]
+    [SerializeField] private float walkSpeed = 5f;
+    [SerializeField] private float runMultiplier = 2f;
+
+    [Header("Footstep Settings")]
     [SerializeField] private float footstepInterval = 1f;
 
     private CharacterController controller;
     private PlayerAudio audioPlayer;
     private PlayerInputHandler inputHandler;
-    private PlayerAnimation playerAnimation; 
+    private PlayerAnimation playerAnimation;
+
     private float footstepTimer = 0f;
 
     private void Awake()
@@ -18,31 +23,44 @@ public class PlayerMovement : MonoBehaviour
         controller = GetComponent<CharacterController>();
         audioPlayer = GetComponent<PlayerAudio>();
         inputHandler = GetComponent<PlayerInputHandler>();
-        playerAnimation = GetComponent<PlayerAnimation>(); 
+        playerAnimation = GetComponent<PlayerAnimation>();
     }
 
-    void Update()
+    private void Update()
+    {
+        HandleMovement();
+    }
+
+    private void HandleMovement()
     {
         if (inputHandler.IsAiming)
         {
             footstepTimer = 0f;
             playerAnimation.SetMoveSpeed(0f);
-            return; // \‚¦’†‚ÍˆÚ“®•s‰Â
+            return;
         }
 
         Vector2 moveInput = inputHandler.MoveInput;
-        Vector3 move = transform.forward * moveInput.y + transform.right * moveInput.x;
-        controller.Move(move * moveSpeed * Time.deltaTime);
+        bool isRunning = Keyboard.current.leftShiftKey.isPressed;
+        float speed = isRunning ? walkSpeed * runMultiplier : walkSpeed;
 
-        float currentSpeed = move.magnitude;
-        playerAnimation.SetMoveSpeed(currentSpeed);
+        Vector3 direction = transform.forward * moveInput.y + transform.right * moveInput.x;
+        controller.Move(direction * speed * Time.deltaTime);
 
-        if (move != Vector3.zero)
+        float moveMagnitude = direction.magnitude;
+        playerAnimation.SetMoveSpeed(moveMagnitude);
+
+        HandleFootsteps(direction);
+    }
+
+    private void HandleFootsteps(Vector3 movement)
+    {
+        if (movement != Vector3.zero)
         {
             footstepTimer += Time.deltaTime;
             if (footstepTimer >= footstepInterval)
             {
-                audioPlayer.PlayFootstep();
+                audioPlayer?.PlayFootstep();
                 footstepTimer = 0f;
             }
         }

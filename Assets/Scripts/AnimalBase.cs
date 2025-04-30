@@ -48,6 +48,12 @@ public abstract class AnimalBase : MonoBehaviour, IAnimalBehavior
 
     public virtual void StartWandering()
     {
+        if (!agent.isOnNavMesh)
+        {
+            Debug.LogWarning($"{name} is not on NavMesh yet.");
+            return; // NavMesh‚Éæ‚Á‚Ä‚È‚¢‚È‚ç–³—‚É–Ú“I’nİ’è‚µ‚È‚¢
+        }
+
         isWandering = true;
         timer = 0f;
         currentDuration = Random.Range(minMoveTime, maxMoveTime);
@@ -59,12 +65,17 @@ public abstract class AnimalBase : MonoBehaviour, IAnimalBehavior
         }
     }
 
+
     public virtual void StopWandering()
     {
         isWandering = false;
         timer = 0f;
         currentDuration = Random.Range(minIdleTime, maxIdleTime);
-        agent.ResetPath();
+
+        if (agent.isOnNavMesh)
+        {
+            agent.ResetPath();
+        }
     }
 
     public abstract void ReactToPlayer(Vector3 playerPosition);
