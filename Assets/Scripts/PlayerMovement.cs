@@ -58,6 +58,8 @@ public class PlayerMovement : MonoBehaviour
         if (movement != Vector3.zero)
         {
             footstepTimer += Time.deltaTime;
+            bool isRunning = Keyboard.current.leftShiftKey.isPressed;
+            float currentInterval = isRunning ? 0.2f : footstepInterval;
             if (footstepTimer >= footstepInterval)
             {
                 audioPlayer?.PlayFootstep();
