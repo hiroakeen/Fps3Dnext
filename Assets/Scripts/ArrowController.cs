@@ -18,7 +18,7 @@ public class ArrowController : MonoBehaviour
         if (hitParticlePrefab != null)
         {
             GameObject particle = Instantiate(hitParticlePrefab, transform.position, Quaternion.identity);
-            Destroy(particle, 1f);
+            Destroy(particle, 1.5f);
         }
 
         // インターフェース
