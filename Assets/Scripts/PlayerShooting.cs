@@ -1,18 +1,16 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 public class PlayerShooting : MonoBehaviour
 {
     [SerializeField] private GameObject arrowPrefab;
-    [SerializeField] private GameObject defaultArrow;
-    [SerializeField] private Transform arrowPosition;
-    [SerializeField] private float shootPower = 10f;
+    [SerializeField] private float shootPower = 50f;
     [SerializeField] private float shootCooldown = 1.0f;
-    [SerializeField] private Transform cameraTransform;
+    [SerializeField] private Transform arrowPosition; // 弓の先
+    [SerializeField] private RectTransform reticleUI; // レティクルのRectTransform
+    [SerializeField] private Camera mainCamera; // レンダリング用のカメラ
 
     private bool canShoot = true;
-    private GameObject newBullet;
-
     private PlayerInputHandler inputHandler;
     private PlayerAnimation anim;
     private PlayerAudio audioPlayer;
@@ -22,6 +20,9 @@ public class PlayerShooting : MonoBehaviour
         inputHandler = GetComponent<PlayerInputHandler>();
         anim = GetComponent<PlayerAnimation>();
         audioPlayer = GetComponent<PlayerAudio>();
+
+        if (mainCamera == null)
+            mainCamera = Camera.main;
     }
 
     void Update()
@@ -49,23 +50,35 @@ public class PlayerShooting : MonoBehaviour
     void Shoot()
     {
         anim.TriggerArrowAttack();
-
-        newBullet = Instantiate(arrowPrefab, arrowPosition.position, transform.rotation);
-        Rigidbody rb = newBullet.GetComponent<Rigidbody>();
-        rb.AddForce(cameraTransform.forward * shootPower, ForceMode.Impulse);
-
         audioPlayer.PlayBowShot();
 
-        Destroy(newBullet, 10);
+        // ✅ RectTransform からスクリーン座標を取得
+        Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(mainCamera, reticleUI.position);
+
+        // ✅ 画面上のその位置からRayを作成
+        Ray ray = mainCamera.ScreenPointToRay(screenPoint);
+        Vector3 shootDirection = ray.direction;
+
+        Vector3 spawnPos = arrowPosition.position;
+        Quaternion rotation = Quaternion.LookRotation(shootDirection);
+
+        GameObject arrow = Instantiate(arrowPrefab, spawnPos, rotation);
+        Rigidbody rb = arrow.GetComponent<Rigidbody>();
+        rb.useGravity = true;
+        rb.linearVelocity = shootDirection * shootPower;
+
+        Destroy(arrow, 10f);
         StartCoroutine(ArrowCooldown());
+
+        // デバッグ表示
+        Debug.DrawRay(ray.origin, shootDirection * 5f, Color.red, 2f);
+        Debug.DrawRay(spawnPos, shootDirection * 5f, Color.cyan, 2f);
     }
 
     IEnumerator ArrowCooldown()
     {
         canShoot = false;
-        defaultArrow.SetActive(false);
         yield return new WaitForSeconds(shootCooldown);
-        defaultArrow.SetActive(true);
         canShoot = true;
     }
 }
