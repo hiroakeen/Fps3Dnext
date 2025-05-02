@@ -23,6 +23,8 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void Update()
     {
+        if (GameManager.Instance.IsPaused) return;
+
         MoveInput = input.actions["Move"].ReadValue<Vector2>();
         LookInput = input.actions["Look"].ReadValue<Vector2>();
         IsRightClickHeld = Mouse.current.rightButton.isPressed;

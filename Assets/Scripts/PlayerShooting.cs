@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class PlayerShooting : MonoBehaviour
 {
@@ -7,7 +8,7 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] private float shootPower = 50f;
     [SerializeField] private float shootCooldown = 1.0f;
     [SerializeField] private Transform arrowPosition; // 弓の先
-    [SerializeField] private RectTransform reticleUI; // レティクルのRectTransform
+    [SerializeField] private Image reticleUI; // レティクルのRectTransform
     [SerializeField] private Camera mainCamera; // レンダリング用のカメラ
 
     private bool canShoot = true;
@@ -15,6 +16,7 @@ public class PlayerShooting : MonoBehaviour
     private PlayerAnimation anim;
     private PlayerAudio audioPlayer;
 
+    public bool IsDrawing { get; private set; }
     void Awake()
     {
         inputHandler = GetComponent<PlayerInputHandler>();
@@ -27,6 +29,8 @@ public class PlayerShooting : MonoBehaviour
 
     void Update()
     {
+        IsDrawing = inputHandler.IsRightClickHeld;
+
         if (inputHandler.IsRightClickHeld)
         {
             if (inputHandler.IsRightClickDown)
@@ -53,7 +57,7 @@ public class PlayerShooting : MonoBehaviour
         audioPlayer.PlayBowShot();
 
         // ✅ RectTransform からスクリーン座標を取得
-        Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(mainCamera, reticleUI.position);
+        Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(mainCamera, reticleUI.rectTransform.position);
 
         // ✅ 画面上のその位置からRayを作成
         Ray ray = mainCamera.ScreenPointToRay(screenPoint);

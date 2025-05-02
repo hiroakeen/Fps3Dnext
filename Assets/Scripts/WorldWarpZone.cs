@@ -17,6 +17,10 @@ public class WorldWarpZone : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
+        // タグでフィルター
+        if (!other.CompareTag("Player") && !other.CompareTag("Animal"))
+            return;
+
         var t = other.transform;
         Vector3 pos = t.position;
         Vector3 local = pos - center;
@@ -37,7 +41,6 @@ public class WorldWarpZone : MonoBehaviour
 
         if (!warped) return;
 
-        // 特別対応：CharacterController対応（プレイヤー）
         if (other.TryGetComponent<CharacterController>(out var controller))
         {
             controller.enabled = false;
@@ -46,8 +49,8 @@ public class WorldWarpZone : MonoBehaviour
         }
         else
         {
-            // 通常のTransform移動（動物など）
             t.position = pos;
         }
     }
+
 }

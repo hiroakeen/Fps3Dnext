@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
 
     public float SurvivalTime => survivalTime;
     public float FinalSurvivalTime { get; private set; }
+    public bool IsPaused { get; private set; }
 
     public bool IsGameStarted => hasStarted;
 
@@ -68,6 +69,27 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(1f); // STARTï\é¶Ç™è¡Ç¶ÇÈÇ‹Ç≈ë“ã@
 
         hasStarted = true;
+    }
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        countdownUI = FindAnyObjectByType<CountdownUI>();
+    }
+
+    public void SetPaused(bool pause)
+    {
+        IsPaused = pause;
+        Time.timeScale = pause ? 0f : 1f;
+        Cursor.lockState = pause ? CursorLockMode.None : CursorLockMode.Locked;
+        Cursor.visible = pause;
     }
 
 }

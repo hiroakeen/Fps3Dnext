@@ -17,7 +17,7 @@ public class GameOverUI : MonoBehaviour
 
     public void Retry()
     {
-        SceneManager.LoadScene("GameScene");
+        SceneManager.LoadScene("LoadScene");
     }
 
     public void BackToTitle()
