@@ -91,7 +91,6 @@ public class Bee : MonoBehaviour
         isDead = true;
         agent.isStopped = true;
         animator.SetTrigger("Die");
-
         Destroy(gameObject, 2f);
     }
 }

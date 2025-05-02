@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(Rigidbody))]
@@ -14,29 +14,26 @@ public class ArrowController : MonoBehaviour
         if (hasHit) return;
         hasHit = true;
 
-        // ƒqƒbƒg‚Ìƒp[ƒeƒBƒNƒ‹
         if (hitParticlePrefab != null)
         {
-            GameObject particle = Instantiate(hitParticlePrefab, transform.position, Quaternion.identity);
+            var particle = Instantiate(hitParticlePrefab, transform.position, Quaternion.identity);
             Destroy(particle, 1.5f);
         }
 
-        // ƒCƒ“ƒ^[ƒtƒF[ƒX
         if (collision.gameObject.TryGetComponent<IHittable>(out var hittable))
         {
             hittable.OnHit();
         }
 
-        // h‚³‚Á‚Ä~‚Ü‚é
         StickArrow(collision);
-
-        // ˆê’èŠÔŒã‚É–î‚ğíœ
         Destroy(gameObject, destroyDelay);
     }
 
+
+
     private void StickArrow(Collision collision)
     {
-        // Rigidbody ‚ğ’â~
+        // Rigidbody ã‚’åœæ­¢
         Rigidbody rb = GetComponent<Rigidbody>();
         if (rb != null)
         {
@@ -44,10 +41,10 @@ public class ArrowController : MonoBehaviour
             rb.detectCollisions = false;
         }
 
-        // “–‚½‚Á‚½‘Šè‚Éh‚³‚éiTransform‚Ìe‚Éj
+        // å½“ãŸã£ãŸç›¸æ‰‹ã«åˆºã•ã‚‹ï¼ˆTransformã®è¦ªã«ï¼‰
         transform.parent = collision.transform;
 
-        // ÚG–Ê‚ÌŠp“x‚É‡‚í‚¹‚Äh‚³‚éi©‘R‚ÈŒü‚«j
+        // æ¥è§¦é¢ã®è§’åº¦ã«åˆã‚ã›ã¦åˆºã•ã‚‹ï¼ˆè‡ªç„¶ãªå‘ãï¼‰
         ContactPoint contact = collision.contacts[0];
         transform.position = contact.point;
         transform.rotation = Quaternion.LookRotation(-contact.normal);

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Rabbit : AnimalBase
+public class Rabbit : AnimalBase, IHittable
 {
     public override void ReactToPlayer(Vector3 playerPosition)
     {
@@ -15,5 +15,10 @@ public class Rabbit : AnimalBase
 
         isWandering = true;
         currentDuration = Random.Range(minMoveTime, maxMoveTime);
+    }
+
+    public override void OnHit()
+    {
+        Destroy(gameObject); // ‘¦Ž€‚ÅOK
     }
 }
