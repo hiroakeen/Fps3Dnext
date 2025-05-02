@@ -709,11 +709,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5b06bf04bddce545b659195a7746f23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectionRange: 8
-  attackRange: 2
+  detectionRange: 5
+  attackRange: 5
   moveRadius: 5
-  moveInterval: 3
-  attackCooldown: 1.5
+  moveInterval: 2
+  attackCooldown: 3
   foodPrefab: {fileID: 7803966916032281713, guid: f2def03e6b5b4fc43b0f439088cd0ce3, type: 3}
 --- !u!143 &6810042360983389813
 CharacterController:

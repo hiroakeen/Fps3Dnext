@@ -3073,6 +3073,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 8168839321792176404, guid: 5b152a0b1bb5602409f12e951fde0965, type: 3}
+      propertyPath: maxHealth
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8842836259808051015, guid: 5b152a0b1bb5602409f12e951fde0965, type: 3}
       propertyPath: reticleUI
       value: 
