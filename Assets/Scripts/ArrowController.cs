@@ -16,18 +16,32 @@ public class ArrowController : MonoBehaviour
 
         if (hitParticlePrefab != null)
         {
-            var particle = Instantiate(hitParticlePrefab, transform.position, Quaternion.identity);
-            Destroy(particle, 1.5f);
+            Instantiate(hitParticlePrefab, transform.position, Quaternion.identity);
         }
 
-        if (collision.gameObject.TryGetComponent<IHittable>(out var hittable))
+        int damage = 1;
+
+        // ✅ ヘッド or ボディ判定
+        if (collision.collider.GetComponent<HitboxPart>() is HitboxPart hitPart)
         {
-            hittable.OnHit();
+            damage = hitPart.GetDamage();
+            Debug.Log($"Hit {hitPart.part}, damage = {damage}");
+        }
+
+        // ✅ ダメージ対応（IDamageableなら優先）
+        if (collision.collider.GetComponentInParent<IDamageable>() is IDamageable dmg)
+        {
+            dmg.OnHit(damage);
+        }
+        else if (collision.collider.GetComponentInParent<IHittable>() is IHittable hit)
+        {
+            hit.OnHit();
         }
 
         StickArrow(collision);
         Destroy(gameObject, destroyDelay);
     }
+
 
 
 

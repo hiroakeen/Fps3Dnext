@@ -19,6 +19,7 @@ public class Rabbit : AnimalBase, IHittable
 
     public override void OnHit()
     {
-        Destroy(gameObject); // ‘¦Ž€‚ÅOK
+        Destroy(gameObject); // ‘¦Ž€
     }
+
 }

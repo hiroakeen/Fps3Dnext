@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Bear : MonoBehaviour, IHittable
+public class Bear : MonoBehaviour,IDamageable
 {
     public float detectRange = 15f;
     public float attackRange = 3f;
@@ -121,14 +121,24 @@ public class Bear : MonoBehaviour, IHittable
         {
             int index = Random.Range(1, 4);
             animator.SetTrigger($"Attack{index}");
+
+            if (player.TryGetComponent<PlayerHealth>(out var health))
+            {
+                health.TakeDamage(2); // クマは即死（2ダメージ）
+            }
         }
     }
 
-    public void OnHit()
+
+    public void OnHit() => OnHit(1);
+
+    public void OnHit(int damage)
     {
         if (isDead) return;
 
-        hitCount++;
+        hitCount += damage;
+        Debug.Log($"Bear took {damage} damage (total: {hitCount})");
+
         if (hitCount >= 3)
         {
             Die();
@@ -138,11 +148,12 @@ public class Bear : MonoBehaviour, IHittable
     void Die()
     {
         isDead = true;
-        agent.isStopped = true;
-        animator.SetTrigger("Die");
-        animator.SetBool("CombatIdle", false);
-        animator.SetBool("Sit", false);
-        CancelInvoke(nameof(TryAttack));
+        GetComponent<Animator>()?.SetTrigger("Die");
+        if (TryGetComponent<NavMeshAgent>(out var agent))
+        {
+            agent.isStopped = true;
+        }
+
         Destroy(gameObject, 3f);
     }
 }

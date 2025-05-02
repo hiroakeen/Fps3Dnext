@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
+[RequireComponent(typeof(NavMeshAgent))]
 public class FoxPartner : MonoBehaviour
 {
     [Header("References")]
@@ -28,7 +29,14 @@ public class FoxPartner : MonoBehaviour
 
     private void Update()
     {
-        // Animator に速度を反映（ブレンドツリー用）
+        // 無効な動物参照をクリア
+        if (nearestAnimal != null && !nearestAnimal.gameObject.activeInHierarchy)
+        {
+            nearestAnimal = null;
+            hasStartedGuiding = false;
+        }
+
+        // アニメーションに速度反映
         animator.SetFloat("MoveSpeed", agent.velocity.magnitude);
 
         nearestAnimal = FindNearestAnimal();
@@ -118,6 +126,10 @@ public class FoxPartner : MonoBehaviour
             agent.SetDestination(hit.position);
             agent.speed = 2f;
         }
+        else
+        {
+            agent.ResetPath();
+        }
     }
 
     private void OrbitAroundPlayer()
@@ -131,6 +143,10 @@ public class FoxPartner : MonoBehaviour
             agent.SetDestination(hit.position);
             agent.speed = 2f;
         }
+        else
+        {
+            agent.ResetPath();
+        }
     }
 
     private Transform FindNearestAnimal()
@@ -141,6 +157,8 @@ public class FoxPartner : MonoBehaviour
 
         foreach (GameObject animal in animals)
         {
+            if (!animal.activeInHierarchy) continue;
+
             float dist = Vector3.Distance(transform.position, animal.transform.position);
             if (dist < minDistance)
             {

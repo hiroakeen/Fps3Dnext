@@ -1,8 +1,8 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class Bee : MonoBehaviour
+public class Bee : MonoBehaviour ,IHittable
 {
     public float detectionRange = 8f;
     public float attackRange = 2f;
@@ -23,7 +23,7 @@ public class Bee : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
-        agent.updateRotation = false; // ƒnƒ`‚Í‰ñ“]•s—v‚ÈƒP[ƒX‘½‚¢
+        agent.updateRotation = false; // ãƒãƒã¯å›è»¢ä¸è¦ãªã‚±ãƒ¼ã‚¹å¤šã„
         agent.updateUpAxis = false;
     }
 
@@ -52,16 +52,29 @@ public class Bee : MonoBehaviour
             RandomMove();
         }
 
-        // ƒAƒjƒ[ƒVƒ‡ƒ“XV
+        // âœ… ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼æ–¹å‘ã«å›è»¢ï¼ˆYè»¸ã®ã¿ï¼‰
+        if (distance <= detectionRange)
+        {
+            Vector3 direction = (player.position - transform.position).normalized;
+            direction.y = 0f; // æ°´å¹³å›è»¢ã®ã¿ã«åˆ¶é™
+            if (direction != Vector3.zero)
+            {
+                Quaternion toRotation = Quaternion.LookRotation(direction);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, 360 * Time.deltaTime);
+            }
+        }
+
+        // ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³æ›´æ–°
         animator.SetFloat("Speed", agent.velocity.magnitude);
     }
+
 
     void RandomMove()
     {
         if (moveTimer < moveInterval) return;
 
         Vector3 randomPoint = transform.position + Random.insideUnitSphere * moveRadius;
-        randomPoint.y = transform.position.y; // …•½ˆÚ“®‚Ì‚İ
+        randomPoint.y = transform.position.y; // æ°´å¹³ç§»å‹•ã®ã¿
         agent.SetDestination(randomPoint);
         animator.Play("Move");
 
@@ -76,13 +89,18 @@ public class Bee : MonoBehaviour
 
     void Attack()
     {
-        agent.SetDestination(transform.position); // ˆê’â~
+        agent.SetDestination(transform.position); // ä¸€æ™‚åœæ­¢
         animator.SetTrigger("Attack");
-        ;
 
-        // UŒ‚”»’è‚È‚Ç‚ ‚ê‚Î‚±‚±‚Å’Ç‰Á
-        Debug.Log("Bee attacks the player!");
+        if (player != null && Vector3.Distance(transform.position, player.position) <= attackRange)
+        {
+            if (player.TryGetComponent<PlayerHealth>(out var health))
+            {
+                health.TakeDamage(1); // ãƒãƒã¯1ãƒ€ãƒ¡ãƒ¼ã‚¸ Ã—2ã§æ­»äº¡
+            }
+        }
     }
+
 
     public void OnHit()
     {
