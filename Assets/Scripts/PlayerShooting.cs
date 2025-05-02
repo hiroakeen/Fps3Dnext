@@ -36,7 +36,7 @@ public class PlayerShooting : MonoBehaviour
 
             anim.SetAttackState(true);
 
-            if (inputHandler.IsLeftClickDown && canShoot)
+            if (inputHandler.IsLeftClickDown && canShoot && GameManager.Instance.IsGameStarted)
             {
                 Shoot();
             }

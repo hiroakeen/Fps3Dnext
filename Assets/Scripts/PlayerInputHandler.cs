@@ -5,6 +5,7 @@ public class PlayerInputHandler : MonoBehaviour
 {
     private PlayerInput input;
 
+
     public Vector2 MoveInput { get; private set; }
     public Vector2 LookInput { get; private set; }
     public bool IsRightClickHeld { get; private set; }
@@ -12,6 +13,8 @@ public class PlayerInputHandler : MonoBehaviour
     public bool IsLeftClickDown { get; private set; }
 
     public bool IsAiming => IsRightClickHeld;
+
+
 
     private void Awake()
     {

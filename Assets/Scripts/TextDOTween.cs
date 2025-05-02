@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class TextDOTween : MonoBehaviour
 {
-    public Text loadingText;
+    public TextMeshProUGUI loadingText;
     private Sequence seq;
 
     private void Start()
@@ -15,16 +15,17 @@ public class TextDOTween : MonoBehaviour
 
     private void AnimateLoadingText()
     {
-        seq = DOTween.Sequence(); // Ç±Ç±Ç≈ê≥ÇµÇ¢seqçÏê¨
+        seq = DOTween.Sequence();
 
-        seq.Append(loadingText.DOFade(0f, 1f)); // 1ïbÇ©ÇØÇƒìßñæÇ…
-        seq.Join(loadingText.rectTransform.DOScale(1.2f, 1f)); // ìØéûÇ…ägëÂ
-        seq.Append(loadingText.DOFade(1f, 1f)); // 1ïbÇ©ÇØÇƒå≥Ç…ñﬂÇ∑
-        seq.Join(loadingText.rectTransform.DOScale(1f, 1f)); // ÉTÉCÉYÇ‡ñﬂÇ∑
+        for (int i = 0; i < 2; i++)
+        {
+            seq.Append(loadingText.DOFade(0f, 1f)); // 1ïbÇ©ÇØÇƒìßñæÇ…
+            seq.Join(loadingText.rectTransform.DOScale(1.2f, 1f)); // ìØéûÇ…ägëÂ
+            seq.Append(loadingText.DOFade(1f, 1f)); // 1ïbÇ©ÇØÇƒå≥Ç…ñﬂÇ∑
+            seq.Join(loadingText.rectTransform.DOScale(1f, 1f)); // ÉTÉCÉYÇ‡ñﬂÇ∑
+        }
 
-
-        // 4ïbå„Ç…TweenÇé~ÇﬂÇÈ
-        Invoke(nameof(StopAnimation), 3.6f);
+        Invoke(nameof(StopAnimation), 3f);
     }
 
     private void StopAnimation()

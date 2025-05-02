@@ -1,44 +1,46 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
-    private static  AudioManager instance;
-    [SerializeField] private AudioSource _audioSource;
-    private readonly Dictionary<string, AudioClip> _clips = new Dictionary<string, AudioClip>();
+    public static AudioManager Instance { get; private set; }
 
-    public static AudioManager Instance
-    {
-        get { return instance; }
-    }
+    [Header("BGM ê›íË")]
+    [SerializeField] private AudioClip bgmClip;
+    private AudioSource bgmSource;
 
-    private void Awake()
+    void Awake()
     {
-        if (null != instance)
+        if (Instance != null)
         {
             Destroy(gameObject);
             return;
         }
 
+        Instance = this;
         DontDestroyOnLoad(gameObject);
-        instance = this;
 
-        var audioClips = Resources.LoadAll<AudioClip>("2D_SE");
-        foreach (var clip in audioClips)
+        bgmSource = gameObject.AddComponent<AudioSource>();
+        bgmSource.clip = bgmClip;
+        bgmSource.loop = true;
+        bgmSource.playOnAwake = false;
+        bgmSource.volume = 0.5f;
+        bgmSource.Play();
+    }
+    public void PlayBGM()
+    {
+        if (!bgmSource.isPlaying)
         {
-            _clips.Add(clip.name, clip);
+            bgmSource.Play();
         }
     }
 
-    public void Play(string clipName)
+    public void StopBGM()
     {
-        if (!_clips.ContainsKey(clipName))
-        {
-            throw new Exception("Sound" + clipName + "is not defind");
-        }
+        bgmSource.Stop();
+    }
 
-        _audioSource.clip = _clips[clipName];
-        _audioSource.Play();
+    public void SetVolume(float volume)
+    {
+        bgmSource.volume = volume;
     }
 }
