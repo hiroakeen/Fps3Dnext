@@ -2,13 +2,15 @@
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class Bee : MonoBehaviour ,IHittable
+public class Bee : MonoBehaviour, IHittable
 {
     public float detectionRange = 8f;
     public float attackRange = 2f;
     public float moveRadius = 5f;
     public float moveInterval = 3f;
     public float attackCooldown = 1.5f;
+
+    [SerializeField] private GameObject foodPrefab;
 
     private Transform player;
     private Animator animator;
@@ -18,14 +20,17 @@ public class Bee : MonoBehaviour ,IHittable
     private float attackTimer;
     private bool isDead = false;
 
-    [SerializeField] private GameObject foodPrefab; 
+    private Vector3 initialPosition; // ✅ 初期位置を記録
+
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
-        agent.updateRotation = false; // ハチは回転不要なケース多い
+        agent.updateRotation = false;
         agent.updateUpAxis = false;
+
+        initialPosition = transform.position; // ✅ スタート時に保存
     }
 
     void Update()
@@ -50,14 +55,14 @@ public class Bee : MonoBehaviour ,IHittable
         }
         else
         {
-            RandomMove();
+            ReturnToOrigin(); // ✅ 離れたら初期位置に戻る
         }
 
-        // ✅ プレイヤー方向に回転（Y軸のみ）
+        // プレイヤー方向に回転（Y軸のみ）
         if (distance <= detectionRange)
         {
             Vector3 direction = (player.position - transform.position).normalized;
-            direction.y = 0f; // 水平回転のみに制限
+            direction.y = 0f;
             if (direction != Vector3.zero)
             {
                 Quaternion toRotation = Quaternion.LookRotation(direction);
@@ -65,21 +70,7 @@ public class Bee : MonoBehaviour ,IHittable
             }
         }
 
-        // アニメーション更新
         animator.SetFloat("Speed", agent.velocity.magnitude);
-    }
-
-
-    void RandomMove()
-    {
-        if (moveTimer < moveInterval) return;
-
-        Vector3 randomPoint = transform.position + Random.insideUnitSphere * moveRadius;
-        randomPoint.y = transform.position.y; // 水平移動のみ
-        agent.SetDestination(randomPoint);
-        animator.Play("Move");
-
-        moveTimer = 0f;
     }
 
     void ChasePlayer()
@@ -88,20 +79,36 @@ public class Bee : MonoBehaviour ,IHittable
         animator.Play("Move");
     }
 
+    void ReturnToOrigin()
+    {
+        float distanceToOrigin = Vector3.Distance(transform.position, initialPosition);
+
+        if (distanceToOrigin > 0.5f)
+        {
+            agent.SetDestination(initialPosition);
+            agent.speed = 2.5f;
+            animator.Play("Move");
+        }
+        else
+        {
+            agent.ResetPath();
+            animator.Play("Idle");
+        }
+    }
+
     void Attack()
     {
-        agent.SetDestination(transform.position); // 一時停止
+        agent.SetDestination(transform.position);
         animator.SetTrigger("Attack");
 
         if (player != null && Vector3.Distance(transform.position, player.position) <= attackRange)
         {
-            if (player.TryGetComponent<PlayerHealth>(out var health))
+            if (player.TryGetComponent<PlayerStatus>(out var health))
             {
-                health.TakeDamage(1); // ハチは1ダメージ ×2で死亡
+                health.TakeDamage(1);
             }
         }
     }
-
 
     public void OnHit()
     {

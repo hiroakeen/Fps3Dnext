@@ -8,7 +8,6 @@ public class GameOverTextAnimation : MonoBehaviour
     {
         var transformCache = transform;
         var defaultPosition = transformCache.localPosition;
-        transformCache.localPosition = new Vector3(0, 300f);
         transformCache.DOLocalMove(defaultPosition, 1f)
             .SetEase(Ease.Linear)
             .OnComplete(() =>
@@ -17,9 +16,4 @@ public class GameOverTextAnimation : MonoBehaviour
             });
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

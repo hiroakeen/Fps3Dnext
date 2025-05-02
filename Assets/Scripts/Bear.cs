@@ -8,7 +8,6 @@ public class Bear : MonoBehaviour,IDamageable
     public float sitChance = 0.05f;
     public float sitDuration = 10f;
 
-    private int hitCount = 0;
     private bool isDead = false;
     private bool isSitting = false;
     private bool inCombat = false;
@@ -122,7 +121,7 @@ public class Bear : MonoBehaviour,IDamageable
             int index = Random.Range(1, 4);
             animator.SetTrigger($"Attack{index}");
 
-            if (player.TryGetComponent<PlayerHealth>(out var health))
+            if (player.TryGetComponent<PlayerStatus>(out var health))
             {
                 health.TakeDamage(2); // クマは即死（2ダメージ）
             }

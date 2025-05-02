@@ -13,6 +13,7 @@ public class FoxPartner : MonoBehaviour
     [SerializeField] private float runThreshold = 15f;
     [SerializeField] private float walkThreshold = 7f;
     [SerializeField] private float maxGuideDistance = 20f;
+    [SerializeField] private float stopDistanceFromAnimal = 1.5f;
 
     private NavMeshAgent agent;
     private Animator animator;
@@ -69,6 +70,7 @@ public class FoxPartner : MonoBehaviour
         }
     }
 
+
     private void GuideToAnimal()
     {
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
@@ -80,7 +82,6 @@ public class FoxPartner : MonoBehaviour
 
         if (nearestAnimal != null)
         {
-            Vector3 targetPos = Vector3.Lerp(player.position, nearestAnimal.position, 0.7f);
             float distanceToAnimal = Vector3.Distance(transform.position, nearestAnimal.position);
 
             if (distanceToAnimal > runThreshold)
@@ -91,15 +92,18 @@ public class FoxPartner : MonoBehaviour
             {
                 agent.speed = 3f;
             }
-            else
+            else if (distanceToAnimal <= stopDistanceFromAnimal)
             {
                 agent.ResetPath();
                 return;
             }
 
+            // “®•¨Šñ‚è‚Ìƒ|ƒWƒVƒ‡ƒ“‚ÉˆÚ“®
+            Vector3 targetPos = Vector3.Lerp(player.position, nearestAnimal.position, 0.85f);
             agent.SetDestination(targetPos);
         }
     }
+
 
     private void FollowPlayerIdle()
     {

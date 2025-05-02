@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
 
     private float survivalTime = 0f;
     private bool isGameOver = false;
+    public float SurvivalTime => survivalTime;
 
     void Awake()
     {
