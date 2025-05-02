@@ -18,7 +18,7 @@ public class Bear : MonoBehaviour,IDamageable
     private NavMeshAgent agent;
     private float sitTimer;
     private float randomCheckTimer;
-
+    [SerializeField] private GameObject foodPrefab; 
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
@@ -136,14 +136,16 @@ public class Bear : MonoBehaviour,IDamageable
     {
         if (isDead) return;
 
-        hitCount += damage;
-        Debug.Log($"Bear took {damage} damage (total: {hitCount})");
-
-        if (hitCount >= 3)
+        isDead = true;
+        if (foodPrefab != null)
         {
-            Die();
+            Instantiate(foodPrefab, transform.position + Vector3.up, Quaternion.identity);
         }
+
+        animator.SetTrigger("Die");
+        Destroy(gameObject, 2f);
     }
+
 
     void Die()
     {

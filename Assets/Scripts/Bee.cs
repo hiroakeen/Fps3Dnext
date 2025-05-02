@@ -18,6 +18,7 @@ public class Bee : MonoBehaviour ,IHittable
     private float attackTimer;
     private bool isDead = false;
 
+    [SerializeField] private GameObject foodPrefab; 
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
@@ -107,7 +108,11 @@ public class Bee : MonoBehaviour ,IHittable
         if (isDead) return;
 
         isDead = true;
-        agent.isStopped = true;
+        if (foodPrefab != null)
+        {
+            Instantiate(foodPrefab, transform.position + Vector3.up, Quaternion.identity);
+        }
+
         animator.SetTrigger("Die");
         Destroy(gameObject, 2f);
     }

@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Rabbit : AnimalBase, IHittable
 {
+    [SerializeField] private GameObject foodPrefab; 
     public override void ReactToPlayer(Vector3 playerPosition)
     {
         Vector3 dir = (transform.position - playerPosition).normalized;
