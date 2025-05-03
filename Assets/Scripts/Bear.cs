@@ -1,36 +1,38 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Bear : MonoBehaviour,IDamageable
+public class Bear : AnimalBase, IDamageable
 {
+    [Header("Bear Settings")]
     public float detectRange = 15f;
     public float attackRange = 3f;
     public float sitChance = 0.05f;
     public float sitDuration = 10f;
+    [SerializeField] private AudioClip bearCallSound;
+    [SerializeField] private GameObject foodPrefab;
 
+    private Transform player;
     private bool isDead = false;
     private bool isSitting = false;
     private bool inCombat = false;
 
-    private Transform player;
-    private Animator animator;
-    private NavMeshAgent agent;
-    private float sitTimer;
-    private float randomCheckTimer;
-    [SerializeField] private GameObject foodPrefab; 
-    void Start()
+    private float sitTimer = 0f;
+    private float randomCheckTimer = 0f;
+
+    protected override void Start()
     {
+        base.Start();
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
-        animator = GetComponent<Animator>();
-        agent = GetComponent<NavMeshAgent>();
+        callSound = bearCallSound;
     }
 
-    void Update()
+    protected override void Update()
     {
+        base.Update();
+
         if (isDead || player == null) return;
 
         float dist = Vector3.Distance(transform.position, player.position);
-        animator.SetFloat("MoveSpeed", agent.velocity.magnitude);
 
         if (dist <= detectRange)
         {
@@ -45,7 +47,6 @@ public class Bear : MonoBehaviour,IDamageable
             }
         }
 
-        // Sit中の時間管理
         if (isSitting)
         {
             sitTimer += Time.deltaTime;
@@ -66,10 +67,6 @@ public class Bear : MonoBehaviour,IDamageable
             {
                 Sit();
             }
-            else
-            {
-                Wander();
-            }
             randomCheckTimer = 0f;
         }
     }
@@ -82,19 +79,9 @@ public class Bear : MonoBehaviour,IDamageable
         animator.SetBool("Sit", true);
     }
 
-    void Wander()
-    {
-        Vector3 point = transform.position + Random.insideUnitSphere * 6f;
-        if (NavMesh.SamplePosition(point, out var hit, 2f, NavMesh.AllAreas))
-        {
-            agent.SetDestination(hit.position);
-        }
-    }
-
     void EnterCombat()
     {
-        if (isSitting) return; // 座ってたら無視
-        if (inCombat) return;
+        if (isSitting || inCombat) return;
 
         inCombat = true;
         agent.ResetPath();
@@ -118,43 +105,49 @@ public class Bear : MonoBehaviour,IDamageable
         float dist = Vector3.Distance(transform.position, player.position);
         if (dist <= attackRange)
         {
-            int index = Random.Range(1, 4);
-            animator.SetTrigger($"Attack{index}");
+            animator.SetTrigger($"Attack{Random.Range(1, 4)}");
 
             if (player.TryGetComponent<PlayerStatus>(out var health))
             {
-                health.TakeDamage(2); // クマは即死（2ダメージ）
+                health.TakeDamage(2);
             }
         }
     }
 
+    public override void ReactToPlayer(Vector3 playerPosition)
+    {
+        float dist = Vector3.Distance(transform.position, playerPosition);
+        if (dist <= detectRange)
+        {
+            EnterCombat();
+        }
+        else
+        {
+            ExitCombat();
+        }
+    }
 
-    public void OnHit() => OnHit(1);
+    public override void OnHit()
+    {
+        OnHit(1);
+    }
 
     public void OnHit(int damage)
     {
         if (isDead) return;
 
         isDead = true;
+
+        animator.SetTrigger("Die");
+
         if (foodPrefab != null)
         {
             Instantiate(foodPrefab, transform.position + Vector3.up, Quaternion.identity);
         }
 
-        animator.SetTrigger("Die");
+        agent.isStopped = true;
         Destroy(gameObject, 2f);
     }
+    
 
-
-    void Die()
-    {
-        isDead = true;
-        GetComponent<Animator>()?.SetTrigger("Die");
-        if (TryGetComponent<NavMeshAgent>(out var agent))
-        {
-            agent.isStopped = true;
-        }
-
-        Destroy(gameObject, 3f);
-    }
 }

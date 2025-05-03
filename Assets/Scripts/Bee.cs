@@ -11,6 +11,8 @@ public class Bee : MonoBehaviour, IHittable
     public float attackCooldown = 1.5f;
 
     [SerializeField] private GameObject foodPrefab;
+    [SerializeField] private AudioClip spawnSound;
+    private AudioSource audioSource;
 
     private Transform player;
     private Animator animator;
@@ -30,8 +32,17 @@ public class Bee : MonoBehaviour, IHittable
         agent.updateRotation = false;
         agent.updateUpAxis = false;
 
-        initialPosition = transform.position; // ✅ スタート時に保存
+        audioSource = GetComponent<AudioSource>();
+        if (spawnSound != null && audioSource != null)
+        {
+            audioSource.clip = spawnSound;
+            audioSource.loop = true;
+            audioSource.Play();
+        }
+
+        initialPosition = transform.position;
     }
+
 
     void Update()
     {
@@ -115,6 +126,12 @@ public class Bee : MonoBehaviour, IHittable
         if (isDead) return;
 
         isDead = true;
+
+        if (audioSource != null && audioSource.isPlaying)
+        {
+            audioSource.Stop(); // ← 死亡時に羽音停止
+        }
+
         if (foodPrefab != null)
         {
             Instantiate(foodPrefab, transform.position + Vector3.up, Quaternion.identity);
@@ -123,4 +140,5 @@ public class Bee : MonoBehaviour, IHittable
         animator.SetTrigger("Die");
         Destroy(gameObject, 2f);
     }
+
 }

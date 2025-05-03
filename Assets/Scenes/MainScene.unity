@@ -15,7 +15,7 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
   m_Fog: 1
-  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  m_FogColor: {r: 0.40251565, g: 0.38859212, b: 0.38859212, a: 1}
   m_FogMode: 1
   m_FogDensity: 0.01
   m_LinearFogStart: 10
@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionBounces: 1
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
-  m_Sun: {fileID: 0}
+  m_Sun: {fileID: 410087040}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -94,7 +94,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 20201, guid: 0000000000000000f000000000000000, type: 0}
-  m_LightingSettings: {fileID: 0}
+  m_LightingSettings: {fileID: 4890085278179872738, guid: 7618509b1927610439e6bf8a4cfa718f, type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -899,7 +899,7 @@ GameObject:
   - component: {fileID: 480089015}
   - component: {fileID: 480089014}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: Hearts
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1144,7 +1144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cec35d44e14bb3341b1f7d4388e1d9cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bgmClip: {fileID: 8300000, guid: beca29d675442e54f91c1c6109cf90a3, type: 3}
+  bgmClip: {fileID: 8300000, guid: 170d537630bbc428e866e014f1b52a62, type: 3}
 --- !u!1 &618608749
 GameObject:
   m_ObjectHideFlags: 0
@@ -1649,7 +1649,7 @@ GameObject:
   - component: {fileID: 1139928905}
   - component: {fileID: 1139928906}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: PlayerUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3029,6 +3029,18 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0.4
       objectReference: {fileID: 0}
+    - target: {fileID: 1771922362511324999, guid: 5b152a0b1bb5602409f12e951fde0965, type: 3}
+      propertyPath: m_Volume
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1771922362511324999, guid: 5b152a0b1bb5602409f12e951fde0965, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 8300000, guid: 613745e4b26364f46a3c02298c7e9b24, type: 3}
+    - target: {fileID: 1771922362511324999, guid: 5b152a0b1bb5602409f12e951fde0965, type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 613745e4b26364f46a3c02298c7e9b24, type: 3}
     - target: {fileID: 1842671774471577803, guid: 5b152a0b1bb5602409f12e951fde0965, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -3073,10 +3085,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 6391466943410816323, guid: 5b152a0b1bb5602409f12e951fde0965, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 8300000, guid: 93bcaabb6f7b1234c83ca065223b7a19, type: 3}
+    - target: {fileID: 6391466943410816323, guid: 5b152a0b1bb5602409f12e951fde0965, type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 93bcaabb6f7b1234c83ca065223b7a19, type: 3}
     - target: {fileID: 8168839321792176404, guid: 5b152a0b1bb5602409f12e951fde0965, type: 3}
       propertyPath: maxHealth
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 8611051560114951371, guid: 5b152a0b1bb5602409f12e951fde0965, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 8300000, guid: 770e43875129c73428dab3f67e9f493f, type: 3}
+    - target: {fileID: 8611051560114951371, guid: 5b152a0b1bb5602409f12e951fde0965, type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 770e43875129c73428dab3f67e9f493f, type: 3}
     - target: {fileID: 8842836259808051015, guid: 5b152a0b1bb5602409f12e951fde0965, type: 3}
       propertyPath: reticleUI
       value: 
@@ -3127,7 +3155,7 @@ MonoBehaviour:
   cameraTransform: {fileID: 7434026534825569508}
   playerBody: {fileID: 3903282962765627887}
   characterController: {fileID: 5819780043489198719}
-  mouseSensitivity: 2
+  mouseSensitivity: 5
   mainCamera: {fileID: 7434026534825569504}
   normalFOV: 60
   aimFOV: 40

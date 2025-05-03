@@ -18,15 +18,26 @@ public abstract class AnimalBase : MonoBehaviour, IAnimalBehavior
     protected float currentDuration;
     protected bool isWandering;
 
+    [Header("Audio")]
+    [SerializeField, HideInInspector]
+    protected AudioClip callSound;
+    public float minCallInterval = 10f;
+    public float maxCallInterval = 20f;
+
+    protected AudioSource audioSource;
+    private float callTimer;
+    private float nextCallTime;
     protected virtual void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     protected virtual void Start()
     {
         StopWandering();
+        ResetCallTimer();
     }
 
     protected virtual void Update()
@@ -44,6 +55,7 @@ public abstract class AnimalBase : MonoBehaviour, IAnimalBehavior
             float speed = agent.velocity.magnitude;
             animator.SetFloat("Speed", speed);
         }
+        HandleCallTimer();
     }
 
     public virtual void StartWandering()
@@ -104,6 +116,29 @@ public abstract class AnimalBase : MonoBehaviour, IAnimalBehavior
         Destroy(gameObject, 2f);
 
         Debug.Log($"{gameObject.name} was hit and is dying.");
+    }
+    protected virtual void HandleCallTimer()
+    {
+        if (!isWandering || callSound == null || audioSource == null) return;
+
+        callTimer += Time.deltaTime;
+
+        if (callTimer >= nextCallTime)
+        {
+            PlayCallSound();
+            ResetCallTimer();
+        }
+    }
+
+    protected virtual void PlayCallSound()
+    {
+        audioSource.PlayOneShot(callSound);
+    }
+
+    protected virtual void ResetCallTimer()
+    {
+        callTimer = 0f;
+        nextCallTime = Random.Range(minCallInterval, maxCallInterval);
     }
 
 }
