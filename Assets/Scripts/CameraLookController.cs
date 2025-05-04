@@ -7,7 +7,8 @@ public class CameraLookController : MonoBehaviour
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private Transform playerBody;
     [SerializeField] private CharacterController characterController;
-    [SerializeField] private float mouseSensitivity = 2.0f;
+    [SerializeField] private float mouseSensitivity = 1.0f;
+    [SerializeField] private float smoothTime = 0.05f;
 
     [Header("Zoom Settings")]
     [SerializeField] private Camera mainCamera;
@@ -19,11 +20,14 @@ public class CameraLookController : MonoBehaviour
     [Header("Head Bob Settings")]
     [SerializeField] private float bobSpeed = 14f;
     [SerializeField] private float bobAmount = 0.05f;
+
     private float defaultYPos;
     private float bobTimer;
     private PlayerShooting playerShooting;
 
     private float xRotation = 0f;
+    private Vector2 currentLook;
+    private Vector2 currentLookVelocity;
     private PlayerInput input;
 
     void Awake()
@@ -45,15 +49,16 @@ public class CameraLookController : MonoBehaviour
     {
         if (GameManager.Instance.IsPaused) return;
 
-        Vector2 lookInput = input.actions["Look"].ReadValue<Vector2>() * mouseSensitivity;
+        Vector2 targetLook = input.actions["Look"].ReadValue<Vector2>() * mouseSensitivity;
+        currentLook = Vector2.SmoothDamp(currentLook, targetLook, ref currentLookVelocity, smoothTime);
 
         // 垂直回転（カメラ）
-        xRotation -= lookInput.y;
+        xRotation -= currentLook.y;
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
         cameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
 
         // 水平回転（プレイヤー本体）
-        playerBody.Rotate(Vector3.up * lookInput.x);
+        playerBody.Rotate(Vector3.up * currentLook.x);
 
         HandleAiming();
         HandleHeadBobbing();
@@ -98,12 +103,11 @@ public class CameraLookController : MonoBehaviour
 
     public void SetMouseSensitivity(float value)
     {
-        mouseSensitivity = value * 0.5f; //感度の実感をあげるため0.5倍で調整
+        mouseSensitivity = value * 0.2f;
     }
 
     private bool PlayerIsDrawingBow()
     {
         return playerShooting != null && playerShooting.IsDrawing;
     }
-
 }

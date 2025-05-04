@@ -18,6 +18,9 @@ public class Bear : AnimalBase, IDamageable
 
     private float sitTimer = 0f;
     private float randomCheckTimer = 0f;
+    private readonly string[] attackTriggers = { "Attack1", "Attack2", "Attack3" };
+
+    private bool hasReacted = false;
 
     protected override void Start()
     {
@@ -36,11 +39,18 @@ public class Bear : AnimalBase, IDamageable
 
         if (dist <= detectRange)
         {
+            if (!hasReacted)
+            {
+                ShowAlertIcon(); // ← 気づいたときに一度だけ表示
+                hasReacted = true;
+            }
             EnterCombat();
         }
         else
         {
             ExitCombat();
+            hasReacted = false;
+
             if (!isSitting)
             {
                 RandomBehavior();
@@ -105,7 +115,8 @@ public class Bear : AnimalBase, IDamageable
         float dist = Vector3.Distance(transform.position, player.position);
         if (dist <= attackRange)
         {
-            animator.SetTrigger($"Attack{Random.Range(1, 4)}");
+            string selectedTrigger = attackTriggers[Random.Range(0, attackTriggers.Length)];
+            animator.SetTrigger(selectedTrigger);
 
             if (player.TryGetComponent<PlayerStatus>(out var health))
             {
@@ -119,11 +130,17 @@ public class Bear : AnimalBase, IDamageable
         float dist = Vector3.Distance(transform.position, playerPosition);
         if (dist <= detectRange)
         {
+            if (!hasReacted)
+            {
+                ShowAlertIcon(); // ← ここでも呼べる（使い分けOK）
+                hasReacted = true;
+            }
             EnterCombat();
         }
         else
         {
             ExitCombat();
+            hasReacted = false;
         }
     }
 
@@ -148,6 +165,4 @@ public class Bear : AnimalBase, IDamageable
         agent.isStopped = true;
         Destroy(gameObject, 2f);
     }
-    
-
 }

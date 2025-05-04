@@ -898,6 +898,7 @@ GameObject:
   - component: {fileID: 480089016}
   - component: {fileID: 480089015}
   - component: {fileID: 480089014}
+  - component: {fileID: 480089017}
   m_Layer: 5
   m_Name: Hearts
   m_TagString: Untagged
@@ -974,6 +975,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 480089012}
   m_CullTransparentMesh: 1
+--- !u!114 &480089017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 480089012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 882a8e532f2e9c8449721705b6e86e7b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerStatus: {fileID: 5819780043489198718}
+  hearts:
+  - {fileID: 1334802308}
+  - {fileID: 779243408}
+  - {fileID: 1695553267}
 --- !u!1 &558505608 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4788685900146799164, guid: 5b152a0b1bb5602409f12e951fde0965, type: 3}
@@ -1638,6 +1656,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sensitivitySlider: {fileID: 1134992439}
   valueText: {fileID: 118325895}
+  cameraLookController: {fileID: 0}
+  multiplier: 2
 --- !u!1 &1139928904
 GameObject:
   m_ObjectHideFlags: 0
@@ -1783,6 +1803,7 @@ RectTransform:
   - {fileID: 1139928905}
   - {fileID: 749652518}
   - {fileID: 2004700916}
+  - {fileID: 1673239452}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2158,6 +2179,94 @@ Transform:
   - {fileID: 561068227}
   m_Father: {fileID: 269571642}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1673239451
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1673239452}
+  - component: {fileID: 1673239455}
+  - component: {fileID: 1673239454}
+  - component: {fileID: 1673239453}
+  m_Layer: 5
+  m_Name: 'DamageMask '
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1673239452
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1673239451}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1208626029}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &1673239453
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1673239451}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
+--- !u!114 &1673239454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1673239451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1673239455
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1673239451}
+  m_CullTransparentMesh: 1
 --- !u!1 &1690529368
 GameObject:
   m_ObjectHideFlags: 0
@@ -3097,6 +3206,14 @@ PrefabInstance:
       propertyPath: maxHealth
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 8168839321792176404, guid: 5b152a0b1bb5602409f12e951fde0965, type: 3}
+      propertyPath: damageMaskGroup
+      value: 
+      objectReference: {fileID: 1673239453}
+    - target: {fileID: 8168839321792176404, guid: 5b152a0b1bb5602409f12e951fde0965, type: 3}
+      propertyPath: damageMaskImage
+      value: 
+      objectReference: {fileID: 1673239454}
     - target: {fileID: 8611051560114951371, guid: 5b152a0b1bb5602409f12e951fde0965, type: 3}
       propertyPath: m_Resource
       value: 
@@ -3156,6 +3273,7 @@ MonoBehaviour:
   playerBody: {fileID: 3903282962765627887}
   characterController: {fileID: 5819780043489198719}
   mouseSensitivity: 5
+  smoothTime: 0.05
   mainCamera: {fileID: 7434026534825569504}
   normalFOV: 60
   aimFOV: 40

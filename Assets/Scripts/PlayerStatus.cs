@@ -1,12 +1,17 @@
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerStatus : MonoBehaviour
 {
-    [Header("�X�e�[�^�X")]
-    [SerializeField] private int maxHealth = 2;
+    [Header("ステータス")]
+    [SerializeField] private int maxHealth = 3;
     [SerializeField] private float maxHunger = 100f;
-    [SerializeField] private float hungerDecreaseInterval = 3f; // 3�b������
+    [SerializeField] private float hungerDecreaseInterval = 3f;
     [SerializeField] private float hungerDecreaseAmount = 1f;
+
+    [Header("UI演出")]
+    [SerializeField] private Image damageMaskImage; // HPが減ると暗くなるマスク
+
     public float MaxHunger => maxHunger;
     public int Health { get; private set; }
     public float Hunger { get; private set; }
@@ -24,6 +29,12 @@ public class PlayerStatus : MonoBehaviour
     {
         if (IsDead) return;
 
+        HandleHunger();
+        UpdateDamageMask();
+    }
+
+    void HandleHunger()
+    {
         hungerTimer += Time.deltaTime;
 
         if (hungerTimer >= hungerDecreaseInterval)
@@ -32,7 +43,7 @@ public class PlayerStatus : MonoBehaviour
             Hunger = Mathf.Clamp(Hunger, 0f, maxHunger);
             hungerTimer = 0f;
 
-            Debug.Log($"�󕠓x: {Hunger}");
+            Debug.Log($"空腹度: {Hunger}");
         }
 
         if (Hunger <= 0 || Health <= 0)
@@ -46,7 +57,12 @@ public class PlayerStatus : MonoBehaviour
         if (IsDead) return;
 
         Health -= amount;
-        if (Health <= 0) Die();
+        Health = Mathf.Clamp(Health, 0, maxHealth);
+
+        if (Health <= 0)
+        {
+            Die();
+        }
     }
 
     public void RestoreHunger(float amount)
@@ -63,5 +79,17 @@ public class PlayerStatus : MonoBehaviour
     {
         IsDead = true;
         GameManager.Instance.GameOver();
+    }
+
+    void UpdateDamageMask()
+    {
+        if (damageMaskImage == null) return;
+
+        float healthRatio = Mathf.Clamp01((float)Health / maxHealth);
+        float targetAlpha = 1f - healthRatio; // HPが減るほど濃く
+
+        Color color = damageMaskImage.color;
+        color.a = Mathf.Lerp(color.a, targetAlpha, Time.deltaTime * 5f);
+        damageMaskImage.color = color;
     }
 }

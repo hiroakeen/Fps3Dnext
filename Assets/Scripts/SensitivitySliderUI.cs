@@ -6,6 +6,9 @@ public class SensitivitySliderUI : MonoBehaviour
 {
     [SerializeField] private Slider sensitivitySlider;
     [SerializeField] private TextMeshProUGUI valueText;
+    [SerializeField] private CameraLookController cameraLookController; // ä¥ìxîΩâf
+
+    [SerializeField] private float multiplier = 2.0f; // ïœâªÇÃã≠í≤åWêî
 
     void Start()
     {
@@ -15,6 +18,12 @@ public class SensitivitySliderUI : MonoBehaviour
 
     void UpdateDisplay(float value)
     {
-        valueText.text = $"{value:F1}x";
+        float displayValue = value * multiplier;
+        valueText.text = $"{displayValue:F1}x";
+
+        if (cameraLookController != null)
+        {
+            cameraLookController.SetMouseSensitivity(displayValue);
+        }
     }
 }

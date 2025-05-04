@@ -663,6 +663,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resultText: {fileID: 440470958}
+  clickSound: {fileID: 8300000, guid: 40f9c6bf9f852a14ab5aa49b1f3bfc9f, type: 3}
 --- !u!4 &1007666703
 Transform:
   m_ObjectHideFlags: 0

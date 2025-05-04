@@ -10,10 +10,19 @@ public class Bee : MonoBehaviour, IHittable
     public float moveInterval = 3f;
     public float attackCooldown = 1.5f;
 
+    [Header("Bee Settings")]
     [SerializeField] private GameObject foodPrefab;
     [SerializeField] private AudioClip spawnSound;
-    private AudioSource audioSource;
 
+    [Header("Alert Settings")]
+    [SerializeField] private GameObject alertIconPrefab;
+    [SerializeField] private Transform alertAnchor;
+    [SerializeField] private float alertDisplayTime = 1.5f;
+
+    private GameObject currentAlertIcon;
+    private bool hasReacted = false;
+
+    private AudioSource audioSource;
     private Transform player;
     private Animator animator;
     private NavMeshAgent agent;
@@ -22,7 +31,7 @@ public class Bee : MonoBehaviour, IHittable
     private float attackTimer;
     private bool isDead = false;
 
-    private Vector3 initialPosition; // ✅ 初期位置を記録
+    private Vector3 initialPosition;
 
     void Start()
     {
@@ -43,7 +52,6 @@ public class Bee : MonoBehaviour, IHittable
         initialPosition = transform.position;
     }
 
-
     void Update()
     {
         if (isDead || player == null) return;
@@ -62,11 +70,18 @@ public class Bee : MonoBehaviour, IHittable
         }
         else if (distance <= detectionRange)
         {
+            if (!hasReacted)
+            {
+                ShowAlertIcon();
+                hasReacted = true;
+            }
+
             ChasePlayer();
         }
         else
         {
-            ReturnToOrigin(); // ✅ 離れたら初期位置に戻る
+            hasReacted = false;
+            ReturnToOrigin();
         }
 
         // プレイヤー方向に回転（Y軸のみ）
@@ -129,7 +144,7 @@ public class Bee : MonoBehaviour, IHittable
 
         if (audioSource != null && audioSource.isPlaying)
         {
-            audioSource.Stop(); // ← 死亡時に羽音停止
+            audioSource.Stop(); // 死亡時に羽音停止
         }
 
         if (foodPrefab != null)
@@ -141,4 +156,16 @@ public class Bee : MonoBehaviour, IHittable
         Destroy(gameObject, 2f);
     }
 
+    private void ShowAlertIcon()
+    {
+        if (alertIconPrefab == null || alertAnchor == null) return;
+
+        if (currentAlertIcon != null)
+        {
+            Destroy(currentAlertIcon);
+        }
+
+        currentAlertIcon = Instantiate(alertIconPrefab, alertAnchor.position, Quaternion.identity, alertAnchor);
+        Destroy(currentAlertIcon, alertDisplayTime);
+    }
 }

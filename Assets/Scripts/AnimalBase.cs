@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
@@ -27,6 +27,14 @@ public abstract class AnimalBase : MonoBehaviour, IAnimalBehavior
     protected AudioSource audioSource;
     private float callTimer;
     private float nextCallTime;
+
+    [Header("Alert")]
+    [SerializeField] private GameObject alertIconPrefab;
+    [SerializeField] private Transform alertAnchor; // é ­ä¸Šãªã©ã«è¨­ç½®ã™ã‚‹ç©ºã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+    [SerializeField] private float alertDisplayTime = 1.5f;
+
+    private GameObject currentAlertIcon;
+
     protected virtual void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -63,7 +71,7 @@ public abstract class AnimalBase : MonoBehaviour, IAnimalBehavior
         if (!agent.isOnNavMesh)
         {
             Debug.LogWarning($"{name} is not on NavMesh yet.");
-            return; // NavMesh‚Éæ‚Á‚Ä‚È‚¢‚È‚ç–³—‚É–Ú“I’nİ’è‚µ‚È‚¢
+            return; // NavMeshã«ä¹—ã£ã¦ãªã„ãªã‚‰ç„¡ç†ã«ç›®çš„åœ°è¨­å®šã—ãªã„
         }
 
         isWandering = true;
@@ -96,7 +104,7 @@ public abstract class AnimalBase : MonoBehaviour, IAnimalBehavior
     {
         if (animator != null)
         {
-            animator.SetTrigger("Die"); // AnyState ¨ Death ‚É‘JˆÚ
+            animator.SetTrigger("Die"); // AnyState â†’ Death ã«é·ç§»
         }
 
         if (agent != null && agent.isOnNavMesh)
@@ -105,14 +113,14 @@ public abstract class AnimalBase : MonoBehaviour, IAnimalBehavior
             agent.ResetPath();
         }
 
-        // •¨—E“–‚½‚è”»’è‚È‚Ç–³Œø‰»
+        // ç‰©ç†ãƒ»å½“ãŸã‚Šåˆ¤å®šãªã©ç„¡åŠ¹åŒ–
         Collider collider = GetComponent<Collider>();
         if (collider != null)
         {
             collider.enabled = false;
         }
 
-        // €–SŒã‚ÉƒIƒuƒWƒFƒNƒg‚ğíœ
+        // æ­»äº¡å¾Œã«ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å‰Šé™¤
         Destroy(gameObject, 2f);
 
         Debug.Log($"{gameObject.name} was hit and is dying.");
@@ -139,6 +147,18 @@ public abstract class AnimalBase : MonoBehaviour, IAnimalBehavior
     {
         callTimer = 0f;
         nextCallTime = Random.Range(minCallInterval, maxCallInterval);
+    }
+    protected virtual void ShowAlertIcon()
+    {
+        if (alertIconPrefab == null || alertAnchor == null) return;
+
+        if (currentAlertIcon != null)
+        {
+            Destroy(currentAlertIcon);
+        }
+
+        currentAlertIcon = Instantiate(alertIconPrefab, alertAnchor.position, Quaternion.identity, alertAnchor);
+        Destroy(currentAlertIcon, alertDisplayTime);
     }
 
 }

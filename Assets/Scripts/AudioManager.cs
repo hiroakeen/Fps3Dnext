@@ -17,7 +17,6 @@ public class AudioManager : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
 
         bgmSource = gameObject.AddComponent<AudioSource>();
         bgmSource.clip = bgmClip;
