@@ -12,8 +12,9 @@ public class ArrowController : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         if (hasHit) return;
-        hasHit = true;
+        hasHit = true; // 最初にフラグを立てて多重処理防止
 
+        // パーティクルを1回だけ再生
         if (hitParticlePrefab != null)
         {
             Instantiate(hitParticlePrefab, transform.position, Quaternion.identity);
@@ -21,14 +22,14 @@ public class ArrowController : MonoBehaviour
 
         int damage = 1;
 
-        // ✅ ヘッド or ボディ判定
+        // ヒット部位によるダメージ判定
         if (collision.collider.GetComponent<HitboxPart>() is HitboxPart hitPart)
         {
             damage = hitPart.GetDamage();
             Debug.Log($"Hit {hitPart.part}, damage = {damage}");
         }
 
-        // ✅ ダメージ対応（IDamageableなら優先）
+        // ダメージ処理（優先順位：IDamageable > IHittable）
         if (collision.collider.GetComponentInParent<IDamageable>() is IDamageable dmg)
         {
             dmg.OnHit(damage);
@@ -38,16 +39,22 @@ public class ArrowController : MonoBehaviour
             hit.OnHit();
         }
 
+        // 矢を刺す処理
         StickArrow(collision);
+
+        // 一定時間後に削除
         Destroy(gameObject, destroyDelay);
     }
 
-
-
-
     private void StickArrow(Collision collision)
     {
-        // Rigidbody を停止
+        // コライダーを無効化して物理挙動停止
+        Collider col = GetComponent<Collider>();
+        if (col != null)
+        {
+            col.enabled = false;
+        }
+
         Rigidbody rb = GetComponent<Rigidbody>();
         if (rb != null)
         {
@@ -55,10 +62,10 @@ public class ArrowController : MonoBehaviour
             rb.detectCollisions = false;
         }
 
-        // 当たった相手に刺さる（Transformの親に）
+        // 接触相手に矢を親としてくっつける
         transform.parent = collision.transform;
 
-        // 接触面の角度に合わせて刺さる（自然な向き）
+        // 接触面の法線方向に矢の向きを合わせて刺す
         ContactPoint contact = collision.contacts[0];
         transform.position = contact.point;
         transform.rotation = Quaternion.LookRotation(-contact.normal);
