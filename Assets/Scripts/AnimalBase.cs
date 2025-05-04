@@ -148,7 +148,7 @@ public abstract class AnimalBase : MonoBehaviour, IAnimalBehavior
         callTimer = 0f;
         nextCallTime = Random.Range(minCallInterval, maxCallInterval);
     }
-    protected virtual void ShowAlertIcon()
+    protected virtual void ShowAlertIcon(float alartPositonHeight)
     {
         if (alertIconPrefab == null || alertAnchor == null) return;
 
@@ -156,8 +156,8 @@ public abstract class AnimalBase : MonoBehaviour, IAnimalBehavior
         {
             Destroy(currentAlertIcon);
         }
-
-        currentAlertIcon = Instantiate(alertIconPrefab, alertAnchor.position, Quaternion.identity, alertAnchor);
+        Vector3 iconPos = alertAnchor.position + Vector3.up * alartPositonHeight; // 頭上に表示
+        currentAlertIcon = Instantiate(alertIconPrefab, iconPos, Quaternion.identity, alertAnchor);
         Destroy(currentAlertIcon, alertDisplayTime);
     }
 

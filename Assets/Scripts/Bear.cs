@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.AI;
 
 public class Bear : AnimalBase, IDamageable
@@ -6,21 +6,21 @@ public class Bear : AnimalBase, IDamageable
     [Header("Bear Settings")]
     public float detectRange = 15f;
     public float attackRange = 3f;
-    public float sitChance = 0.05f;
-    public float sitDuration = 10f;
+    public float attackCooldown = 2f;
     [SerializeField] private AudioClip bearCallSound;
     [SerializeField] private GameObject foodPrefab;
 
     private Transform player;
     private bool isDead = false;
-    private bool isSitting = false;
-    private bool inCombat = false;
-
-    private float sitTimer = 0f;
-    private float randomCheckTimer = 0f;
-    private readonly string[] attackTriggers = { "Attack1", "Attack2", "Attack3" };
-
     private bool hasReacted = false;
+
+    private float attackTimer = 0f;
+    private int currentHealth = 3;
+
+    private enum BearState { Idle, Chase, Combat }
+    private BearState currentState = BearState.Idle;
+
+    private readonly string[] attackTriggers = { "Attack1", "Attack2", "Attack3" };
 
     protected override void Start()
     {
@@ -32,116 +32,111 @@ public class Bear : AnimalBase, IDamageable
     protected override void Update()
     {
         base.Update();
-
         if (isDead || player == null) return;
 
         float dist = Vector3.Distance(transform.position, player.position);
+        attackTimer += Time.deltaTime;
 
-        if (dist <= detectRange)
+        switch (currentState)
         {
-            if (!hasReacted)
-            {
-                ShowAlertIcon(); // © ‹C‚Ã‚¢‚½‚Æ‚«‚Éˆê“x‚¾‚¯•\Ž¦
-                hasReacted = true;
-            }
-            EnterCombat();
+            case BearState.Idle:
+                SetSpeedParameter(0f);
+                if (dist <= detectRange)
+                {
+                    ReactToPlayer(player.position);
+                    SetState(BearState.Chase);
+                }
+                break;
+
+            case BearState.Chase:
+                if (dist > detectRange)
+                {
+                    SetState(BearState.Idle);
+                    hasReacted = false;
+                    return;
+                }
+
+                if (dist > attackRange)
+                {
+                    if (!agent.hasPath || agent.destination != player.position)
+                    {
+                        agent.isStopped = false;
+                        agent.SetDestination(player.position);
+                    }
+
+                    SetSpeedParameter(agent.velocity.magnitude);
+                }
+                else
+                {
+                    SetState(BearState.Combat);
+                }
+                break;
+
+            case BearState.Combat:
+                agent.isStopped = true;
+                SetSpeedParameter(0f);
+
+                if (dist > attackRange)
+                {
+                    agent.isStopped = false;
+                    SetState(BearState.Chase);
+                }
+                else
+                {
+                    FacePlayer();
+                    TryAttack();
+                }
+                break;
         }
-        else
-        {
-            ExitCombat();
-            hasReacted = false;
-
-            if (!isSitting)
-            {
-                RandomBehavior();
-            }
-        }
-
-        if (isSitting)
-        {
-            sitTimer += Time.deltaTime;
-            if (sitTimer >= sitDuration)
-            {
-                isSitting = false;
-                animator.SetBool("Sit", false);
-            }
-        }
     }
 
-    void RandomBehavior()
+    private void SetState(BearState newState)
     {
-        randomCheckTimer += Time.deltaTime;
-        if (randomCheckTimer >= 5f)
+        if (currentState == newState) return;
+        currentState = newState;
+
+        animator.SetBool("CombatIdle", newState == BearState.Combat);
+    }
+
+    private void SetSpeedParameter(float velocity)
+    {
+        float speedValue = Mathf.InverseLerp(0f, 3f, velocity) * 2f;
+        animator.SetFloat("Speed", speedValue);
+    }
+
+    private void FacePlayer()
+    {
+        Vector3 dir = (player.position - transform.position).normalized;
+        dir.y = 0f;
+        if (dir != Vector3.zero)
         {
-            if (Random.value < sitChance)
-            {
-                Sit();
-            }
-            randomCheckTimer = 0f;
+            Quaternion targetRot = Quaternion.LookRotation(dir);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, 720f * Time.deltaTime);
         }
     }
 
-    void Sit()
+    private void TryAttack()
     {
-        isSitting = true;
-        sitTimer = 0f;
-        agent.ResetPath();
-        animator.SetBool("Sit", true);
-    }
+        if (attackTimer < attackCooldown) return;
 
-    void EnterCombat()
-    {
-        if (isSitting || inCombat) return;
+        attackTimer = 0f;
+        string trigger = attackTriggers[Random.Range(0, attackTriggers.Length)];
+        animator.SetTrigger(trigger);
 
-        inCombat = true;
-        agent.ResetPath();
-        animator.SetBool("CombatIdle", true);
-        InvokeRepeating(nameof(TryAttack), 1.5f, Random.Range(2f, 3.5f));
-    }
-
-    void ExitCombat()
-    {
-        if (!inCombat) return;
-
-        inCombat = false;
-        animator.SetBool("CombatIdle", false);
-        CancelInvoke(nameof(TryAttack));
-    }
-
-    void TryAttack()
-    {
-        if (!inCombat || isSitting || isDead) return;
-
-        float dist = Vector3.Distance(transform.position, player.position);
-        if (dist <= attackRange)
+        if (player.TryGetComponent<PlayerStatus>(out var health))
         {
-            string selectedTrigger = attackTriggers[Random.Range(0, attackTriggers.Length)];
-            animator.SetTrigger(selectedTrigger);
-
-            if (player.TryGetComponent<PlayerStatus>(out var health))
-            {
-                health.TakeDamage(2);
-            }
+            health.TakeDamage(3); // ðŸ’¥ æ”»æ’ƒåŠ› = 3
         }
     }
 
     public override void ReactToPlayer(Vector3 playerPosition)
     {
-        float dist = Vector3.Distance(transform.position, playerPosition);
-        if (dist <= detectRange)
+        if (!hasReacted)
         {
-            if (!hasReacted)
-            {
-                ShowAlertIcon(); // © ‚±‚±‚Å‚àŒÄ‚×‚éiŽg‚¢•ª‚¯OKj
-                hasReacted = true;
-            }
-            EnterCombat();
+            ShowAlertIcon(2.8f);
+            hasReacted = true;
         }
-        else
-        {
-            ExitCombat();
-            hasReacted = false;
-        }
+        SetState(BearState.Chase);
     }
 
     public override void OnHit()
@@ -153,8 +148,16 @@ public class Bear : AnimalBase, IDamageable
     {
         if (isDead) return;
 
-        isDead = true;
+        currentHealth -= damage;
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
 
+    private void Die()
+    {
+        isDead = true;
         animator.SetTrigger("Die");
 
         if (foodPrefab != null)

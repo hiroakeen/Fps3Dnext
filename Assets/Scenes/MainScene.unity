@@ -475,13 +475,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animalTypes:
-  - prefab: {fileID: 3158666138578333259, guid: 301754b1e0dea7247be283df90ff50a0, type: 3}
+  - prefab: {fileID: 64369721459256376, guid: 6aaa8ae5b9c3a714d8a81869a6033339, type: 3}
     spawnWeight: 6
     uniqueSpawn: 0
-  - prefab: {fileID: 8796783950381605958, guid: cfd398167044129449af06aa8009255c, type: 3}
+  - prefab: {fileID: 1214733931788947106, guid: 87c52f95553e09a4da89453e6bca918d, type: 3}
     spawnWeight: 3
     uniqueSpawn: 0
-  - prefab: {fileID: 2420494488446820990, guid: da40cac4667564d479490f0c7a2318d0, type: 3}
+  - prefab: {fileID: 1714822879982793560, guid: ae262b2feb8c6c541bae2e90ffb91f6d, type: 3}
     spawnWeight: 1
     uniqueSpawn: 0
   spawnPoints:
@@ -1636,9 +1636,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 473206345}
   m_Direction: 0
   m_MinValue: 1
-  m_MaxValue: 30
+  m_MaxValue: 10
   m_WholeNumbers: 1
-  m_Value: 10
+  m_Value: 4
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1656,7 +1656,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sensitivitySlider: {fileID: 1134992439}
   valueText: {fileID: 118325895}
-  cameraLookController: {fileID: 0}
+  cameraLookController: {fileID: 5819780043489198733}
   multiplier: 2
 --- !u!1 &1139928904
 GameObject:
@@ -1689,6 +1689,7 @@ RectTransform:
   m_Children:
   - {fileID: 564782518}
   - {fileID: 1895701258}
+  - {fileID: 1673239452}
   m_Father: {fileID: 1208626029}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -1803,7 +1804,6 @@ RectTransform:
   - {fileID: 1139928905}
   - {fileID: 749652518}
   - {fileID: 2004700916}
-  - {fileID: 1673239452}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2191,6 +2191,7 @@ GameObject:
   - component: {fileID: 1673239455}
   - component: {fileID: 1673239454}
   - component: {fileID: 1673239453}
+  - component: {fileID: 1673239456}
   m_Layer: 5
   m_Name: 'DamageMask '
   m_TagString: Untagged
@@ -2205,12 +2206,12 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1673239451}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1208626029}
+  m_Father: {fileID: 1139928905}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -2249,7 +2250,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2267,6 +2268,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1673239451}
   m_CullTransparentMesh: 1
+--- !u!114 &1673239456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1673239451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba9143a6cc6f7e34183f3e014573dc30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bloodSprites:
+  - {fileID: 21300000, guid: 493e3d4c4724c804f8bbebe749c9ff77, type: 3}
+  - {fileID: 21300000, guid: 57d2109c3c949be489f1be7e1606777c, type: 3}
+  - {fileID: 21300000, guid: 815ba632b4464eb4a813592a7f01fb7b, type: 3}
+  zOffset: 1.5
+  sortOrder: 10
+  alpha: 0.8
+  scaleMin: 0.8
+  scaleMax: 1.2
 --- !u!1 &1690529368
 GameObject:
   m_ObjectHideFlags: 0
@@ -3135,6 +3157,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 740885723721702503, guid: 5b152a0b1bb5602409f12e951fde0965, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 740885723721702503, guid: 5b152a0b1bb5602409f12e951fde0965, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0.4
       objectReference: {fileID: 0}
@@ -3207,6 +3233,14 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8168839321792176404, guid: 5b152a0b1bb5602409f12e951fde0965, type: 3}
+      propertyPath: bloodEffect
+      value: 
+      objectReference: {fileID: 1673239456}
+    - target: {fileID: 8168839321792176404, guid: 5b152a0b1bb5602409f12e951fde0965, type: 3}
+      propertyPath: bloodPrefab
+      value: 
+      objectReference: {fileID: 1673239451}
+    - target: {fileID: 8168839321792176404, guid: 5b152a0b1bb5602409f12e951fde0965, type: 3}
       propertyPath: damageMaskGroup
       value: 
       objectReference: {fileID: 1673239453}
@@ -3214,6 +3248,22 @@ PrefabInstance:
       propertyPath: damageMaskImage
       value: 
       objectReference: {fileID: 1673239454}
+    - target: {fileID: 8168839321792176404, guid: 5b152a0b1bb5602409f12e951fde0965, type: 3}
+      propertyPath: bloodSprites.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8168839321792176404, guid: 5b152a0b1bb5602409f12e951fde0965, type: 3}
+      propertyPath: 'bloodSprites.Array.data[0]'
+      value: 
+      objectReference: {fileID: 21300000, guid: 493e3d4c4724c804f8bbebe749c9ff77, type: 3}
+    - target: {fileID: 8168839321792176404, guid: 5b152a0b1bb5602409f12e951fde0965, type: 3}
+      propertyPath: 'bloodSprites.Array.data[1]'
+      value: 
+      objectReference: {fileID: 21300000, guid: 57d2109c3c949be489f1be7e1606777c, type: 3}
+    - target: {fileID: 8168839321792176404, guid: 5b152a0b1bb5602409f12e951fde0965, type: 3}
+      propertyPath: 'bloodSprites.Array.data[2]'
+      value: 
+      objectReference: {fileID: 21300000, guid: 815ba632b4464eb4a813592a7f01fb7b, type: 3}
     - target: {fileID: 8611051560114951371, guid: 5b152a0b1bb5602409f12e951fde0965, type: 3}
       propertyPath: m_Resource
       value: 

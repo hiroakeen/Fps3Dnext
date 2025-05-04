@@ -29,8 +29,11 @@ public class GameOverUI : MonoBehaviour
 
     public void Retry()
     {
-        PlaySoundAndLoad("LoadScene");
+        Destroy(GameManager.Instance?.gameObject);
+        SceneManager.LoadScene("LoadScene");
+
     }
+
 
     public void BackToTitle()
     {

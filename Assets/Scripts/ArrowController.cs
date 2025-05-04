@@ -70,4 +70,6 @@ public class ArrowController : MonoBehaviour
         transform.position = contact.point;
         transform.rotation = Quaternion.LookRotation(-contact.normal);
     }
+
+
 }

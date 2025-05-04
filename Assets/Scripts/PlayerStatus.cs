@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 
 public class PlayerStatus : MonoBehaviour
 {
@@ -9,13 +8,13 @@ public class PlayerStatus : MonoBehaviour
     [SerializeField] private float hungerDecreaseInterval = 3f;
     [SerializeField] private float hungerDecreaseAmount = 1f;
 
-    [Header("UI演出")]
-    [SerializeField] private Image damageMaskImage; // HPが減ると暗くなるマスク
+    [Header("エフェクト")]
+    [SerializeField] private BloodEffectController bloodEffect;
 
     public float MaxHunger => maxHunger;
     public int Health { get; private set; }
     public float Hunger { get; private set; }
-    public bool IsDead { get; private set; } = false;
+    public bool IsDead { get; private set; }
 
     private float hungerTimer = 0f;
 
@@ -23,27 +22,26 @@ public class PlayerStatus : MonoBehaviour
     {
         Health = maxHealth;
         Hunger = maxHunger;
+        IsDead = false;
+
+        bloodEffect?.SetMaxHealth(maxHealth);
+        bloodEffect?.SyncBloodWithHealth(Health);
     }
 
     void Update()
     {
         if (IsDead) return;
-
         HandleHunger();
-        UpdateDamageMask();
     }
 
-    void HandleHunger()
+    private void HandleHunger()
     {
         hungerTimer += Time.deltaTime;
 
         if (hungerTimer >= hungerDecreaseInterval)
         {
-            Hunger -= hungerDecreaseAmount;
-            Hunger = Mathf.Clamp(Hunger, 0f, maxHunger);
+            Hunger = Mathf.Clamp(Hunger - hungerDecreaseAmount, 0f, maxHunger);
             hungerTimer = 0f;
-
-            Debug.Log($"空腹度: {Hunger}");
         }
 
         if (Hunger <= 0 || Health <= 0)
@@ -54,10 +52,10 @@ public class PlayerStatus : MonoBehaviour
 
     public void TakeDamage(int amount)
     {
-        if (IsDead) return;
+        if (IsDead || amount <= 0) return;
 
-        Health -= amount;
-        Health = Mathf.Clamp(Health, 0, maxHealth);
+        Health = Mathf.Clamp(Health - amount, 0, maxHealth);
+        bloodEffect?.SyncBloodWithHealth(Health);
 
         if (Health <= 0)
         {
@@ -65,31 +63,24 @@ public class PlayerStatus : MonoBehaviour
         }
     }
 
-    public void RestoreHunger(float amount)
-    {
-        Hunger = Mathf.Clamp(Hunger + amount, 0, maxHunger);
-    }
-
     public void RestoreHealth(int amount)
     {
+        if (IsDead || amount <= 0 || Health >= maxHealth) return;
+
         Health = Mathf.Clamp(Health + amount, 0, maxHealth);
+        bloodEffect?.SyncBloodWithHealth(Health);
     }
 
-    void Die()
+    public void RestoreHunger(float amount)
+    {
+        if (IsDead || amount <= 0) return;
+
+        Hunger = Mathf.Clamp(Hunger + amount, 0f, maxHunger);
+    }
+
+    private void Die()
     {
         IsDead = true;
-        GameManager.Instance.GameOver();
-    }
-
-    void UpdateDamageMask()
-    {
-        if (damageMaskImage == null) return;
-
-        float healthRatio = Mathf.Clamp01((float)Health / maxHealth);
-        float targetAlpha = 1f - healthRatio; // HPが減るほど濃く
-
-        Color color = damageMaskImage.color;
-        color.a = Mathf.Lerp(color.a, targetAlpha, Time.deltaTime * 5f);
-        damageMaskImage.color = color;
+        GameManager.Instance?.GameOver();
     }
 }

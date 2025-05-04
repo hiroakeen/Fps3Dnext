@@ -5,7 +5,7 @@ public class Rabbit : AnimalBase, IHittable
 {
     [Header("Rabbit Settings")]
     [SerializeField] private GameObject foodPrefab;
-    [SerializeField] private AudioClip rabbitCallSound;
+    [SerializeField] private AudioClip rabbitCallSound;  //鳴き声ではなく足音
 
     [Header("Flee Settings")]
     [SerializeField] private float detectPlayerRange = 7f;
@@ -31,7 +31,6 @@ public class Rabbit : AnimalBase, IHittable
         base.Update();
         if (isDead) return;
 
-        // Animator 状態管理（移動中なら鳴き声を繰り返す）
         AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
         bool nowMoving = state.IsName("Move");
 
@@ -50,7 +49,6 @@ public class Rabbit : AnimalBase, IHittable
             }
         }
 
-        // プレイヤー接近チェック → 自動逃走
         if (player != null && agent != null && agent.isOnNavMesh && !isDead && fleeRoutine == null)
         {
             float distance = Vector3.Distance(transform.position, player.position);
@@ -58,17 +56,16 @@ public class Rabbit : AnimalBase, IHittable
             {
                 if (!hasReacted)
                 {
-                    ShowAlertIcon(); // ← ビックリマーク表示
+                    ReactToPlayer(player.position); 
                     hasReacted = true;
                 }
-
-                StartFleeFromPlayer(player.position);
             }
             else
             {
                 hasReacted = false;
             }
         }
+
     }
 
     private void StartFleeFromPlayer(Vector3 playerPosition)
@@ -96,7 +93,7 @@ public class Rabbit : AnimalBase, IHittable
 
         if (agent.isOnNavMesh)
         {
-            agent.ResetPath(); // 停止
+            agent.ResetPath();
         }
 
         fleeRoutine = null;
@@ -106,7 +103,7 @@ public class Rabbit : AnimalBase, IHittable
     {
         if (agent == null || isDead) return;
 
-        ShowAlertIcon(); // ← 任意にReactToPlayerでも表示可能
+        ShowAlertIcon(0.5f);
 
         Vector3 dir = (transform.position - playerPosition).normalized;
         float fleeDistance = wanderRadius * 1.5f;
@@ -120,6 +117,7 @@ public class Rabbit : AnimalBase, IHittable
         isWandering = true;
         currentDuration = Random.Range(minMoveTime, maxMoveTime);
     }
+
 
     public override void OnHit()
     {

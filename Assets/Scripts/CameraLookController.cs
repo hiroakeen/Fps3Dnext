@@ -103,8 +103,16 @@ public class CameraLookController : MonoBehaviour
 
     public void SetMouseSensitivity(float value)
     {
-        mouseSensitivity = value * 0.2f;
+        value = Mathf.Clamp(value, 1f, 10f); // 範囲制限
+
+        // 非線形スケーリング：低い値ほど大きな差を体感
+        float baseValue = 0.005f;  // 最小感度（極端に遅い）
+        float exponent = 2.2f;     // 二次関数以上の急カーブ
+        float scale = 0.003f;      // 全体のスケール
+
+        mouseSensitivity = baseValue + Mathf.Pow(value, exponent) * scale;
     }
+
 
     private bool PlayerIsDrawingBow()
     {
