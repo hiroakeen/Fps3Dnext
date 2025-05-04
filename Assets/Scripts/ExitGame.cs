@@ -1,22 +1,16 @@
 using UnityEngine;
-using UnityEngine.UI;
-
-[RequireComponent(typeof(Button))]
 
 public class GameExit : MonoBehaviour
 {
-    public void ExitGame()
+    void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Application.Quit();
+
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false; // エディター上での確認用
+#endif
         }
-
-        var button = GetComponent<Button>();
-        button.onClick.AddListener(() =>
-        {
-            Application.Quit();
-        });
-
     }
 }
