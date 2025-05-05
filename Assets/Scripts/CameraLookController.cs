@@ -21,6 +21,9 @@ public class CameraLookController : MonoBehaviour
     [SerializeField] private float bobSpeed = 14f;
     [SerializeField] private float bobAmount = 0.05f;
 
+    [Header("Virtual Joystick")]
+    [SerializeField] private VirtualJoystick rightJoystick;
+
     private float defaultYPos;
     private float bobTimer;
     private PlayerShooting playerShooting;
@@ -47,18 +50,23 @@ public class CameraLookController : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.Instance.IsPaused) return;
+        if (GameManager.Instance != null && GameManager.Instance.IsPaused) return;
 
-        Vector2 targetLook = input.actions["Look"].ReadValue<Vector2>() * mouseSensitivity;
-        currentLook = Vector2.SmoothDamp(currentLook, targetLook, ref currentLookVelocity, smoothTime);
+        Vector2 mouseLook = input.actions["Look"].ReadValue<Vector2>() * mouseSensitivity;
+        Vector2 joystickLook = rightJoystick != null ? rightJoystick.InputDirection * mouseSensitivity : Vector2.zero;
+        Vector2 combinedLook = mouseLook + joystickLook;
 
-        // 垂直回転（カメラ）
+        currentLook = Vector2.SmoothDamp(currentLook, combinedLook, ref currentLookVelocity, smoothTime);
+
         xRotation -= currentLook.y;
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
         cameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-
-        // 水平回転（プレイヤー本体）
         playerBody.Rotate(Vector3.up * currentLook.x);
+
+        if (rightJoystick != null)
+        {
+            rightJoystick.UpdateVisual(combinedLook.normalized);
+        }
 
         HandleAiming();
         HandleHeadBobbing();
@@ -103,16 +111,12 @@ public class CameraLookController : MonoBehaviour
 
     public void SetMouseSensitivity(float value)
     {
-        value = Mathf.Clamp(value, 1f, 10f); // 範囲制限
-
-        // 非線形スケーリング：低い値ほど大きな差を体感
-        float baseValue = 0.005f;  // 最小感度（極端に遅い）
-        float exponent = 2.2f;     // 二次関数以上の急カーブ
-        float scale = 0.003f;      // 全体のスケール
-
+        value = Mathf.Clamp(value, 1f, 10f);
+        float baseValue = 0.005f;
+        float exponent = 2.2f;
+        float scale = 0.003f;
         mouseSensitivity = baseValue + Mathf.Pow(value, exponent) * scale;
     }
-
 
     private bool PlayerIsDrawingBow()
     {
