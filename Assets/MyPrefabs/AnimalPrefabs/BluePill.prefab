@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hungerRestore: 10
-  healthRestore: 0
+  healthRestore: 1
 --- !u!136 &7980688808625923430
 CapsuleCollider:
   m_ObjectHideFlags: 0

@@ -1,4 +1,4 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
 using UnityEngine.AI;
 
 [System.Serializable]
@@ -11,15 +11,37 @@ public class AnimalSpawnData
 
 public class AnimalSpawner : MonoBehaviour
 {
+    [Header("Spawn Settings")]
     [SerializeField] private AnimalSpawnData[] animalTypes;
-    [SerializeField] private Transform[] spawnPoints;
     [SerializeField] private float spawnInterval = 5f;
+    [SerializeField] private float minSpawnDistanceFromPlayer = 20f;
+    [SerializeField] private float maxSpawnRadius = 50f;
+    [SerializeField] private int maxSampleAttempts = 10;
 
-    private float timer;
+    [Header("Area Constraint")]
+    [SerializeField] private Collider spawnAreaCollider; // „Éà„É™„Ç¨„ÉºÁØÑÂõ≤„ÅÆ„Ç≥„É©„Ç§„ÉÄ„Éº
+
+    private float timer = 0f;
     private GameObject currentTigerInstance = null;
+    private Transform player;
+
+    void Start()
+    {
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj != null)
+        {
+            player = playerObj.transform;
+        }
+        else
+        {
+            Debug.LogWarning("Player object with tag 'Player' not found.");
+        }
+    }
 
     void Update()
     {
+        if (player == null || spawnAreaCollider == null) return;
+
         timer += Time.deltaTime;
         if (timer >= spawnInterval)
         {
@@ -30,29 +52,44 @@ public class AnimalSpawner : MonoBehaviour
 
     void SpawnAnimal()
     {
-        if (animalTypes.Length == 0 || spawnPoints.Length == 0) return;
-
         AnimalSpawnData selectedData = ChooseByWeight();
         if (selectedData == null) return;
 
         if (selectedData.uniqueSpawn && currentTigerInstance != null) return;
 
-        Transform point = spawnPoints[Random.Range(0, spawnPoints.Length)];
-
-        // NavMesh è„ÇÃóLå¯Ç»à íuÇÉTÉìÉvÉã
-        Vector3 spawnPos = point.position;
-        if (NavMesh.SamplePosition(spawnPos, out NavMeshHit hit, 2.0f, NavMesh.AllAreas))
+        Vector3? spawnPos = GetValidSpawnPosition();
+        if (spawnPos == null)
         {
-            GameObject instance = Instantiate(selectedData.prefab, hit.position, point.rotation);
-
-           
+            Debug.LogWarning("Valid spawn position not found.");
+            return;
         }
-        else
+
+        GameObject instance = Instantiate(selectedData.prefab, spawnPos.Value, Quaternion.identity);
+
+        if (selectedData.uniqueSpawn)
         {
-            Debug.LogWarning("Spawn position not on NavMesh: " + point.name);
+            currentTigerInstance = instance;
         }
     }
 
+    Vector3? GetValidSpawnPosition()
+    {
+        for (int i = 0; i < maxSampleAttempts; i++)
+        {
+            Vector2 randomCircle = Random.insideUnitCircle.normalized * Random.Range(minSpawnDistanceFromPlayer, maxSpawnRadius);
+            Vector3 candidatePos = player.position + new Vector3(randomCircle.x, 0, randomCircle.y);
+
+            if (NavMesh.SamplePosition(candidatePos, out NavMeshHit hit, 2.0f, NavMesh.AllAreas))
+            {
+                if (spawnAreaCollider.bounds.Contains(hit.position))
+                {
+                    return hit.position;
+                }
+            }
+        }
+
+        return null;
+    }
 
     AnimalSpawnData ChooseByWeight()
     {
@@ -78,5 +115,4 @@ public class AnimalSpawner : MonoBehaviour
 
         return null;
     }
-
 }

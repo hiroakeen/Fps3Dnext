@@ -13,6 +13,7 @@ public class Bear : AnimalBase, IDamageable
     private Transform player;
     private bool isDead = false;
     private bool hasReacted = false;
+    private bool hasBeenAttacked = false;
 
     private float attackTimer = 0f;
     private int currentHealth = 3;
@@ -32,7 +33,7 @@ public class Bear : AnimalBase, IDamageable
     protected override void Update()
     {
         base.Update();
-        if (isDead || player == null) return;
+        if (isDead || player == null || !hasBeenAttacked) return; // 攻撃されるまで何もしない
 
         float dist = Vector3.Distance(transform.position, player.position);
         attackTimer += Time.deltaTime;
@@ -41,21 +42,13 @@ public class Bear : AnimalBase, IDamageable
         {
             case BearState.Idle:
                 SetSpeedParameter(0f);
-                if (dist <= detectRange)
+                if (dist <= attackRange)
                 {
-                    ReactToPlayer(player.position);
-                    SetState(BearState.Chase);
+                    SetState(BearState.Combat);
                 }
                 break;
 
             case BearState.Chase:
-                if (dist > detectRange)
-                {
-                    SetState(BearState.Idle);
-                    hasReacted = false;
-                    return;
-                }
-
                 if (dist > attackRange)
                 {
                     if (!agent.hasPath || agent.destination != player.position)
@@ -63,7 +56,6 @@ public class Bear : AnimalBase, IDamageable
                         agent.isStopped = false;
                         agent.SetDestination(player.position);
                     }
-
                     SetSpeedParameter(agent.velocity.magnitude);
                 }
                 else
@@ -78,7 +70,6 @@ public class Bear : AnimalBase, IDamageable
 
                 if (dist > attackRange)
                 {
-                    agent.isStopped = false;
                     SetState(BearState.Chase);
                 }
                 else
@@ -89,7 +80,6 @@ public class Bear : AnimalBase, IDamageable
                 break;
         }
     }
-
     private void SetState(BearState newState)
     {
         if (currentState == newState) return;
@@ -123,11 +113,10 @@ public class Bear : AnimalBase, IDamageable
         string trigger = attackTriggers[Random.Range(0, attackTriggers.Length)];
         animator.SetTrigger(trigger);
 
-        if (player.TryGetComponent<PlayerStatus>(out var health))
-        {
-            health.TakeDamage(3); // 💥 攻撃力 = 3
-        }
+        // 遅延攻撃（0.5秒後にダメージ適用）
+        Invoke(nameof(DealDamageToPlayer), 0.5f);
     }
+
 
     public override void ReactToPlayer(Vector3 playerPosition)
     {
@@ -149,6 +138,14 @@ public class Bear : AnimalBase, IDamageable
         if (isDead) return;
 
         currentHealth -= damage;
+
+        if (!hasBeenAttacked)
+        {
+            hasBeenAttacked = true;
+            SetState(BearState.Chase); // 初攻撃時に追跡開始
+            ShowAlertIcon(2.8f); // 初反応
+        }
+
         if (currentHealth <= 0)
         {
             Die();
@@ -168,4 +165,17 @@ public class Bear : AnimalBase, IDamageable
         agent.isStopped = true;
         Destroy(gameObject, 2f);
     }
+    private void DealDamageToPlayer()
+    {
+        if (player == null) return;
+
+        if (Vector3.Distance(transform.position, player.position) <= attackRange)
+        {
+            if (player.TryGetComponent<PlayerStatus>(out var health))
+            {
+                health.TakeDamage(3);
+            }
+        }
+    }
+
 }
