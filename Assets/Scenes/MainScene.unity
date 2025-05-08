@@ -293,7 +293,7 @@ TerrainCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_TerrainData: {fileID: 15600000, guid: 1facfae483d6e084487b23f6e54b16d9, type: 2}
-  m_EnableTreeColliders: 1
+  m_EnableTreeColliders: 0
 --- !u!218 &269571641
 Terrain:
   m_ObjectHideFlags: 0
