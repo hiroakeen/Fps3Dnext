@@ -30,7 +30,7 @@ public abstract class AnimalBase : MonoBehaviour, IAnimalBehavior
 
     [Header("Alert")]
     [SerializeField] private GameObject alertIconPrefab;
-    [SerializeField] private Transform alertAnchor; // 頭上などに設置する空オブジェクト
+    [SerializeField] private Transform alertAnchor; // 頭上に設置する空オブジェクト
     [SerializeField] private float alertDisplayTime = 1.5f;
 
     private GameObject currentAlertIcon;
@@ -71,7 +71,7 @@ public abstract class AnimalBase : MonoBehaviour, IAnimalBehavior
         if (!agent.isOnNavMesh)
         {
             Debug.LogWarning($"{name} is not on NavMesh yet.");
-            return; // NavMeshに乗ってないなら無理に目的地設定しない
+            return;
         }
 
         isWandering = true;
@@ -121,7 +121,7 @@ public abstract class AnimalBase : MonoBehaviour, IAnimalBehavior
         }
 
         // 死亡後にオブジェクトを削除
-        Destroy(gameObject, 2f);
+        Destroy(gameObject, 1.5f);
 
         Debug.Log($"{gameObject.name} was hit and is dying.");
     }

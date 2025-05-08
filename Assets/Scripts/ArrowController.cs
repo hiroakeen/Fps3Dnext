@@ -5,14 +5,14 @@
 public class ArrowController : MonoBehaviour
 {
     [SerializeField] private GameObject hitParticlePrefab;
-    [SerializeField] private float destroyDelay = 3f;
+    [SerializeField] private float destroyDelay = 2f;
 
     private bool hasHit = false;
 
     private void OnCollisionEnter(Collision collision)
     {
         if (hasHit) return;
-        hasHit = true; // 最初にフラグを立てて多重処理防止
+        hasHit = true;
 
         // パーティクルを1回だけ再生
         if (hitParticlePrefab != null)

@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            SceneManager.sceneLoaded += OnSceneLoaded; // ←ここでも登録しておくと確実
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
         {
@@ -89,7 +89,7 @@ public class GameManager : MonoBehaviour
         if (scene.name == "MainGame")
         {
             countdownUI = FindAnyObjectByType<CountdownUI>();
-            ResetGameState(); // ← ここを必ず呼び出す
+            ResetGameState();
             StartCoroutine(CountdownStart()); // カウントダウンを再開
         }
     }
@@ -104,19 +104,6 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = pause ? CursorLockMode.None : CursorLockMode.Locked;
         Cursor.visible = pause;
     }
-    private IEnumerator CountdownRestart()
-    {
-        hasStarted = false;
-        survivalTime = 0f;
-        isGameOver = false;
-
-        if (countdownUI == null)
-            yield break;
-
-        yield return CountdownStart();
-        hasStarted = true;
-    }
-
 
     public void ResetGameState()
     {
@@ -125,6 +112,4 @@ public class GameManager : MonoBehaviour
         hasStarted = false;
         isGameOver = false;
     }
-
-
 }
