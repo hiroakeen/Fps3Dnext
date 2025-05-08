@@ -121,7 +121,7 @@ public abstract class AnimalBase : MonoBehaviour, IAnimalBehavior
         }
 
         // 死亡後にオブジェクトを削除
-        Destroy(gameObject, 1.5f);
+        Destroy(gameObject, 1.2f);
 
         Debug.Log($"{gameObject.name} was hit and is dying.");
     }

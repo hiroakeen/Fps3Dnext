@@ -184,6 +184,6 @@ public class Bee : AnimalBase, IHittable
 
         animator.SetTrigger("Die");
         agent.isStopped = true;
-        Destroy(gameObject, 2f);
+        Destroy(gameObject, 1.2f);
     }
 }
