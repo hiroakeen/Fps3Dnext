@@ -12,7 +12,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float footstepInterval = 1f;
 
 <<<<<<< Updated upstream
-
+    
 
 =======
 >>>>>>> Stashed changes
@@ -46,11 +46,11 @@ public class PlayerMovement : MonoBehaviour
         }
 
         Vector2 inputVector = inputHandler.MoveInput;
-
 <<<<<<< Updated upstream
-
+        
 =======
 >>>>>>> Stashed changes
+
         bool isRunning = Keyboard.current.leftShiftKey.isPressed;
         float speed = isRunning ? walkSpeed * runMultiplier : walkSpeed;
 
