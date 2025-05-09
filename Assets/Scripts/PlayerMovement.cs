@@ -11,8 +11,11 @@ public class PlayerMovement : MonoBehaviour
     [Header("Footstep Settings")]
     [SerializeField] private float footstepInterval = 1f;
 
+<<<<<<< Updated upstream
     
 
+=======
+>>>>>>> Stashed changes
     private CharacterController controller;
     private PlayerAudio audioPlayer;
     private PlayerInputHandler inputHandler;
@@ -43,7 +46,10 @@ public class PlayerMovement : MonoBehaviour
         }
 
         Vector2 inputVector = inputHandler.MoveInput;
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
 
         bool isRunning = Keyboard.current.leftShiftKey.isPressed;
         float speed = isRunning ? walkSpeed * runMultiplier : walkSpeed;
@@ -54,16 +60,16 @@ public class PlayerMovement : MonoBehaviour
         float moveMagnitude = direction.magnitude;
         playerAnimation.SetMoveSpeed(moveMagnitude);
 
-        HandleFootsteps(direction);
+        HandleFootsteps(direction, isRunning);
     }
 
-    private void HandleFootsteps(Vector3 movement)
+    private void HandleFootsteps(Vector3 movement, bool isRunning)
     {
         if (movement != Vector3.zero)
         {
             footstepTimer += Time.deltaTime;
-            bool isRunning = Keyboard.current.leftShiftKey.isPressed || RunButton.IsPressed;
             float currentInterval = isRunning ? 0.2f : footstepInterval;
+
             if (footstepTimer >= currentInterval)
             {
                 audioPlayer?.PlayFootstep();

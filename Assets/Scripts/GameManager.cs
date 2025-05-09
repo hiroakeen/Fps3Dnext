@@ -1,12 +1,12 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
-
+using unityroom.Api;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    [Header("ƒJƒEƒ“ƒgƒ_ƒEƒ“İ’è")]
+    [Header("ã‚«ã‚¦ãƒ³ãƒˆãƒ€ã‚¦ãƒ³è¨­å®š")]
     [SerializeField] private float countdownTime = 3f;
     [SerializeField] private CountdownUI countdownUI;
 
@@ -26,7 +26,11 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+<<<<<<< Updated upstream
             SceneManager.sceneLoaded += OnSceneLoaded;
+=======
+            SceneManager.sceneLoaded += OnSceneLoaded; // â†ã“ã“ã§ã‚‚ç™»éŒ²ã—ã¦ãŠãã¨ç¢ºå®Ÿ
+>>>>>>> Stashed changes
         }
         else
         {
@@ -52,17 +56,27 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public void GameOver()
-    {
-        isGameOver = true;
-        FinalSurvivalTime = survivalTime;
-        SceneManager.LoadScene("GameOver");
-    }
+
+public void GameOver()
+{
+    isGameOver = true;
+    FinalSurvivalTime = survivalTime;
+
+    // âœ… ãƒ©ãƒ³ã‚­ãƒ³ã‚°é€ä¿¡
+    UnityroomApiClient.Instance.SendScore(
+        1,
+        FinalSurvivalTime,
+        ScoreboardWriteMode.HighScoreDesc
+    );
+
+    SceneManager.LoadScene("GameOver");
+}
 
 
 
 
-    private IEnumerator CountdownStart()
+
+private IEnumerator CountdownStart()
     {
         for (int i = (int)countdownTime; i >= 1; i--)
         {
@@ -71,7 +85,7 @@ public class GameManager : MonoBehaviour
         }
 
         countdownUI?.ShowStart();
-        yield return new WaitForSeconds(1f); // START•\¦‚ªÁ‚¦‚é‚Ü‚Å‘Ò‹@
+        yield return new WaitForSeconds(1f); // STARTè¡¨ç¤ºãŒæ¶ˆãˆã‚‹ã¾ã§å¾…æ©Ÿ
 
         hasStarted = true;
     }
@@ -89,8 +103,13 @@ public class GameManager : MonoBehaviour
         if (scene.name == "MainGame")
         {
             countdownUI = FindAnyObjectByType<CountdownUI>();
+<<<<<<< Updated upstream
             ResetGameState();
             StartCoroutine(CountdownStart()); // ƒJƒEƒ“ƒgƒ_ƒEƒ“‚ğÄŠJ
+=======
+            ResetGameState(); // â† ã“ã“ã‚’å¿…ãšå‘¼ã³å‡ºã™
+            StartCoroutine(CountdownStart()); // ã‚«ã‚¦ãƒ³ãƒˆãƒ€ã‚¦ãƒ³ã‚’å†é–‹
+>>>>>>> Stashed changes
         }
     }
 
