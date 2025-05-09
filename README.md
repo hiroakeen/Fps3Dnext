@@ -61,11 +61,12 @@
 
 ## 参考図書
 - Unity公式eBook
-- Unity本格入門
-- Unity超入門
-- Unityバイブル2nd
-- なるほどなっとくC#
-- C#超入門
-- 独習C#
-- GameProgramingPatternC++
-- オブジェクト設計スタイルガイド　Matthias Noback 著、田中 裕一 訳
+- 作って学べる　Unity本格入門　［Unity 6対応版］賀好 昭仁 著
+- Unityの教科書 Unity 6完全対応版 北村愛実 著
+- Unityゲーム プログラミング・バイブル 2nd Generation 著者：森 哲哉、布留川 英一、西森 丈俊、車谷 勇人、一條 貴彰、打田 恭平、轟 昂、室星 亮太、井本 大登、細田 翔、西岡 陽、平井 佑樹、コポコポ、すいみん、Maruton、karukaru、ハダシA、notargs、EIKI`、おれんじりりぃ、黒河 優介、中村 優一、藤岡 裕吾
+- Unity 3Dゲーム開発ではじめるC#プログラミング Harrison Ferrone　著/吉川 邦夫　訳
+- 新・標準プログラマーズライブラリ なるほどなっとく C#入門 出井秀行　著
+- 確かな力が身につく C#「超」入門 第3版 北村愛実 著
+- 独習C# 第5版 山田 祥寛 著
+- Game Programming Patterns ソフトウェア開発の問題解決メニュー Robert Nystrom　著/武舎 広幸　監修/阿部 和也　訳/上西 昌弘　訳
+- オブジェクト設計スタイルガイド　Matthias Noback 著/田中 裕一 訳
