@@ -26,11 +26,7 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-<<<<<<< Updated upstream
             SceneManager.sceneLoaded += OnSceneLoaded;
-=======
-            SceneManager.sceneLoaded += OnSceneLoaded; // ←ここでも登録しておくと確実
->>>>>>> Stashed changes
         }
         else
         {
@@ -103,13 +99,9 @@ private IEnumerator CountdownStart()
         if (scene.name == "MainGame")
         {
             countdownUI = FindAnyObjectByType<CountdownUI>();
-<<<<<<< Updated upstream
             ResetGameState();
-            StartCoroutine(CountdownStart()); // �J�E���g�_�E�����ĊJ
-=======
+            StartCoroutine(CountdownStart()); // �J�E���g�_�E����ĊJ
             ResetGameState(); // ← ここを必ず呼び出す
-            StartCoroutine(CountdownStart()); // カウントダウンを再開
->>>>>>> Stashed changes
         }
     }
 

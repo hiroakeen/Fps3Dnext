@@ -20,11 +20,6 @@ public class CameraLookController : MonoBehaviour
     [SerializeField] private float bobSpeed = 14f;
     [SerializeField] private float bobAmount = 0.05f;
 
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
     private float defaultYPos;
     private float bobTimer;
     private float xRotation = 0f;
@@ -51,24 +46,17 @@ public class CameraLookController : MonoBehaviour
     {
         if (GameManager.Instance != null && GameManager.Instance.IsPaused) return;
 
-<<<<<<< Updated upstream
         Vector2 mouseLook = input.actions["Look"].ReadValue<Vector2>() * mouseSensitivity;
         Vector2 combinedLook = mouseLook;
-=======
         Vector2 lookInput = input.actions["Look"].ReadValue<Vector2>() * mouseSensitivity;
->>>>>>> Stashed changes
 
         // 垂直回転（カメラのみ）
         xRotation -= lookInput.y;
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
         cameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
 
-<<<<<<< Updated upstream
-      
-=======
         // 水平回転（プレイヤー本体）
         playerBody.Rotate(Vector3.up * lookInput.x);
->>>>>>> Stashed changes
 
         HandleAiming();
         HandleHeadBobbing();
