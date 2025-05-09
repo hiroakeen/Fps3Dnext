@@ -29,15 +29,11 @@ public class ArrowController : MonoBehaviour
             Debug.Log($"Hit {hitPart.part}, damage = {damage}");
         }
 
-        // ダメージ処理（優先順位：IDamageable > IHittable）
         if (collision.collider.GetComponentInParent<IDamageable>() is IDamageable dmg)
         {
             dmg.OnHit(damage);
         }
-        else if (collision.collider.GetComponentInParent<IHittable>() is IHittable hit)
-        {
-            hit.OnHit();
-        }
+
 
         // 矢を刺す処理
         StickArrow(collision);

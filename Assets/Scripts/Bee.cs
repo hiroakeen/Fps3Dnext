@@ -2,7 +2,7 @@
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class Bee : AnimalBase, IHittable
+public class Bee : AnimalBase, IDamageable
 {
     public float detectionRange = 8f;
     public float attackRange = 1f;
@@ -16,8 +16,6 @@ public class Bee : AnimalBase, IHittable
     private Transform player;
     private Vector3 initialPosition;
     private bool isDead = false;
-
-    private float attackTimer = 0f;
 
     private IState currentState;
 
@@ -73,6 +71,17 @@ public class Bee : AnimalBase, IHittable
 
     public override void OnHit()
     {
+        Die();
+    }
+
+    public void OnHit(int damage)
+    {
+        if (isDead) return;
+        Die();
+    }
+
+    private void Die()
+    {
         if (isDead) return;
 
         isDead = true;
@@ -92,7 +101,6 @@ public class Bee : AnimalBase, IHittable
         Destroy(gameObject, 1.2f);
     }
 }
-
 
 public static class BeeExtensions
 {

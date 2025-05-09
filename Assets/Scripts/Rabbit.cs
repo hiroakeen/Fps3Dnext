@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class Rabbit : AnimalBase, IHittable
+public class Rabbit : AnimalBase, IDamageable
 {
     [Header("Rabbit Settings")]
     [SerializeField] private GameObject foodPrefab;
@@ -56,7 +56,7 @@ public class Rabbit : AnimalBase, IHittable
             {
                 if (!hasReacted)
                 {
-                    ReactToPlayer(player.position); 
+                    ReactToPlayer(player.position);
                     hasReacted = true;
                 }
             }
@@ -118,10 +118,20 @@ public class Rabbit : AnimalBase, IHittable
         currentDuration = Random.Range(minMoveTime, maxMoveTime);
     }
 
-
     public override void OnHit()
     {
         if (isDead) return;
+        Die();
+    }
+
+    public void OnHit(int damage)
+    {
+        if (isDead) return;
+        Die();
+    }
+
+    private void Die()
+    {
         isDead = true;
 
         if (foodPrefab != null)

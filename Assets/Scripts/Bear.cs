@@ -41,9 +41,12 @@ public class Bear : AnimalBase, IDamageable, IReactive
     protected override void Update()
     {
         if (isDead || player == null || !hasBeenAttacked) return;
+
         base.Update();
+        attackTimer += Time.deltaTime; 
         currentState?.Update();
     }
+
 
     public void SetState(IState newState)
     {
@@ -101,14 +104,18 @@ public class Bear : AnimalBase, IDamageable, IReactive
 
     public void TryAttack()
     {
+        Debug.Log("Bear attempting attack...");
         if (attackTimer < attackCooldown) return;
 
         attackTimer = 0f;
         string trigger = attackTriggers[Random.Range(0, attackTriggers.Length)];
-        animator.SetTrigger(trigger);
+        Debug.Log("Trigger: " + trigger);
 
+        animator.SetTrigger(trigger);
+        Debug.Log("SetTrigger called");
         Invoke(nameof(DealDamageToPlayer), 0.5f);
     }
+
 
     public void FacePlayer()
     {
@@ -125,7 +132,7 @@ public class Bear : AnimalBase, IDamageable, IReactive
     {
         if (player == null) return;
 
-        if (Vector3.Distance(transform.position, player.position) <= attackRange)
+        if (Vector3.Distance(transform.position, player.position) <= attackRange +2f)
         {
             if (player.TryGetComponent<PlayerStatus>(out var health))
             {

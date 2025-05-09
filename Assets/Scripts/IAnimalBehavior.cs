@@ -1,4 +1,4 @@
-public interface IAnimalBehavior : IHittable
+public interface IAnimalBehavior
 {
     void StartWandering();
     void StopWandering();
