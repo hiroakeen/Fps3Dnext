@@ -2,12 +2,10 @@
 using UnityEngine.SceneManagement;
 using System.Collections;
 using unityroom.Api;
-using unityroom.Api;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    [Header("カウントダウン設定")]
     [Header("カウントダウン設定")]
     [SerializeField] private float countdownTime = 3f;
     [SerializeField] private CountdownUI countdownUI;
@@ -59,21 +57,6 @@ public class GameManager : MonoBehaviour
 
 
 
-
-public void GameOver()
-{
-    isGameOver = true;
-    FinalSurvivalTime = survivalTime;
-
-    // ✅ ランキング送信
-    UnityroomApiClient.Instance.SendScore(
-        1,
-        FinalSurvivalTime,
-        ScoreboardWriteMode.HighScoreDesc
-    );
-
-    SceneManager.LoadScene("GameOver");
-}
 public void GameOver()
 {
     isGameOver = true;
@@ -93,8 +76,6 @@ public void GameOver()
 
 
 
-
-private IEnumerator CountdownStart()
 private IEnumerator CountdownStart()
     {
         for (int i = (int)countdownTime; i >= 1; i--)
@@ -104,7 +85,6 @@ private IEnumerator CountdownStart()
         }
 
         countdownUI?.ShowStart();
-        yield return new WaitForSeconds(1f); // START表示が消えるまで待機
         yield return new WaitForSeconds(1f); // START表示が消えるまで待機
 
         hasStarted = true;
@@ -125,7 +105,7 @@ private IEnumerator CountdownStart()
             countdownUI = FindAnyObjectByType<CountdownUI>();
 <<<<<<< Updated upstream
             ResetGameState();
-            StartCoroutine(CountdownStart()); // �J�E���g�_�E�����ĊJ
+            StartCoroutine(CountdownStart()); // �J�E���g�_�E�����ĊJ
 =======
             ResetGameState(); // ← ここを必ず呼び出す
             StartCoroutine(CountdownStart()); // カウントダウンを再開

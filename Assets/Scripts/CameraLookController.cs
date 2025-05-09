@@ -29,9 +29,7 @@ public class CameraLookController : MonoBehaviour
     private float bobTimer;
     private float xRotation = 0f;
 
-
     private PlayerInput input;
-    private PlayerShooting playerShooting;
     private PlayerShooting playerShooting;
 
     void Awake()
@@ -65,17 +63,16 @@ public class CameraLookController : MonoBehaviour
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
         cameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
 
-
 <<<<<<< Updated upstream
-
+      
 =======
         // 水平回転（プレイヤー本体）
         playerBody.Rotate(Vector3.up * lookInput.x);
 >>>>>>> Stashed changes
+
         HandleAiming();
         HandleHeadBobbing();
 
-        // ESCキーでマウス解放（デバッグ用）
         // ESCキーでマウス解放（デバッグ用）
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
@@ -117,7 +114,6 @@ public class CameraLookController : MonoBehaviour
 
     public void SetMouseSensitivity(float value)
     {
-        // 入力スライダーの値 (1〜10) を対数的に変換
         // 入力スライダーの値 (1〜10) を対数的に変換
         value = Mathf.Clamp(value, 1f, 10f);
         float baseValue = 0.005f;
