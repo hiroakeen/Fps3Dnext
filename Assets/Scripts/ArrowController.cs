@@ -5,7 +5,7 @@
 public class ArrowController : MonoBehaviour
 {
     [SerializeField] private GameObject hitParticlePrefab;
-    [SerializeField] private float destroyDelay = 2f;
+    [SerializeField] private float destroyDelay = 1.5f;
 
     private bool hasHit = false;
 
