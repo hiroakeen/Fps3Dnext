@@ -98,7 +98,7 @@ public class FoxPartner : MonoBehaviour
                 return;
             }
 
-            // “®•¨Šñ‚è‚Ìƒ|ƒWƒVƒ‡ƒ“‚ÉˆÚ“®
+            // “®•¨‚Ì•û‚ÖŒü‚©‚¤
             Vector3 targetPos = Vector3.Lerp(player.position, nearestAnimal.position, 0.85f);
             agent.SetDestination(targetPos);
         }

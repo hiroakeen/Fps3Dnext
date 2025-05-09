@@ -1,11 +1,12 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
-
+using System.Collections.Generic;
+using System.Collections;
 public class GameOverUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI resultText;
-    [SerializeField] private AudioClip clickSound; // © ƒNƒŠƒbƒN‰¹
+    [SerializeField] private AudioClip clickSound;
     private AudioSource audioSource;
 
     void Start()
@@ -53,7 +54,7 @@ public class GameOverUI : MonoBehaviour
         }
     }
 
-    System.Collections.IEnumerator LoadSceneAfterSound(string sceneName)
+    IEnumerator LoadSceneAfterSound(string sceneName)
     {
         yield return new WaitForSecondsRealtime(0.3f); // ‰¹‚ª–Â‚é‚Ì‚ğ‘Ò‚Â
         SceneManager.LoadScene(sceneName);
