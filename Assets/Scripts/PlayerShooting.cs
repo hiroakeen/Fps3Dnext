@@ -56,10 +56,10 @@ public class PlayerShooting : MonoBehaviour
         anim.TriggerArrowAttack();
         audioPlayer.PlayBowShot();
 
-        // ✅ RectTransform からスクリーン座標を取得
+        // RectTransform からスクリーン座標を取得
         Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(mainCamera, reticleUI.rectTransform.position);
 
-        // ✅ 画面上のその位置からRayを作成
+        // 画面上のその位置からRayを作成
         Ray ray = mainCamera.ScreenPointToRay(screenPoint);
         Vector3 shootDirection = ray.direction;
 
