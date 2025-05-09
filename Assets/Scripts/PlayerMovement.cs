@@ -11,8 +11,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Footstep Settings")]
     [SerializeField] private float footstepInterval = 1f;
 
-    [Header("Virtual Joystick")]
-    [SerializeField] private VirtualJoystick leftJoystick;
+    
 
     private CharacterController controller;
     private PlayerAudio audioPlayer;
@@ -44,12 +43,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         Vector2 inputVector = inputHandler.MoveInput;
-        if (leftJoystick != null)
-        {
-            Vector2 joystickInput = leftJoystick.InputDirection;
-            if (joystickInput.sqrMagnitude > 0.01f)
-                inputVector = joystickInput;
-        }
+        
 
         bool isRunning = Keyboard.current.leftShiftKey.isPressed;
         float speed = isRunning ? walkSpeed * runMultiplier : walkSpeed;

@@ -21,8 +21,7 @@ public class CameraLookController : MonoBehaviour
     [SerializeField] private float bobSpeed = 14f;
     [SerializeField] private float bobAmount = 0.05f;
 
-    [Header("Virtual Joystick")]
-    [SerializeField] private VirtualJoystick rightJoystick;
+
 
     private float defaultYPos;
     private float bobTimer;
@@ -53,8 +52,7 @@ public class CameraLookController : MonoBehaviour
         if (GameManager.Instance != null && GameManager.Instance.IsPaused) return;
 
         Vector2 mouseLook = input.actions["Look"].ReadValue<Vector2>() * mouseSensitivity;
-        Vector2 joystickLook = rightJoystick != null ? rightJoystick.InputDirection * mouseSensitivity : Vector2.zero;
-        Vector2 combinedLook = mouseLook + joystickLook;
+        Vector2 combinedLook = mouseLook;
 
         currentLook = Vector2.SmoothDamp(currentLook, combinedLook, ref currentLookVelocity, smoothTime);
 
@@ -63,10 +61,7 @@ public class CameraLookController : MonoBehaviour
         cameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         playerBody.Rotate(Vector3.up * currentLook.x);
 
-        if (rightJoystick != null)
-        {
-            rightJoystick.UpdateVisual(combinedLook.normalized);
-        }
+      
 
         HandleAiming();
         HandleHeadBobbing();
