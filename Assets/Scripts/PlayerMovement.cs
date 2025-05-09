@@ -61,14 +61,17 @@ public class PlayerMovement : MonoBehaviour
         playerAnimation.SetMoveSpeed(moveMagnitude);
 
         HandleFootsteps(direction, isRunning);
+        HandleFootsteps(direction, isRunning);
     }
 
+    private void HandleFootsteps(Vector3 movement, bool isRunning)
     private void HandleFootsteps(Vector3 movement, bool isRunning)
     {
         if (movement != Vector3.zero)
         {
             footstepTimer += Time.deltaTime;
             float currentInterval = isRunning ? 0.2f : footstepInterval;
+
 
             if (footstepTimer >= currentInterval)
             {
