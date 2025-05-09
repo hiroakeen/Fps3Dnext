@@ -1,5 +1,5 @@
 
-public interface IDamageable : IHittable
+public interface IDamageable
 {
     void OnHit(int damage);
 }

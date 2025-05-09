@@ -30,45 +30,20 @@ public class FoxPartner : MonoBehaviour
 
     private void Update()
     {
-        // 無効な動物参照をクリア
-        if (nearestAnimal != null && !nearestAnimal.gameObject.activeInHierarchy)
-        {
-            nearestAnimal = null;
-            hasStartedGuiding = false;
-        }
+        HandleInvalidAnimal();
 
-        // アニメーションに速度反映
         animator.SetFloat("MoveSpeed", agent.velocity.magnitude);
 
         nearestAnimal = FindNearestAnimal();
-
         if (!hasStartedGuiding && nearestAnimal != null)
         {
-            idleTimer += Time.deltaTime;
-            if (idleTimer >= 2f)
-            {
-                hasStartedGuiding = true;
-            }
-            else
-            {
-                agent.ResetPath();
-                return;
-            }
+            HandleIdleBeforeGuide();
+            return;
         }
 
-        if (nearestAnimal != null && Vector3.Distance(transform.position, nearestAnimal.position) < orbitDistance + 1f)
-        {
-            OrbitAroundAnimal();
-        }
-        else if (hasStartedGuiding && nearestAnimal != null)
-        {
-            GuideToAnimal();
-        }
-        else
-        {
-            OrbitAroundPlayer();
-        }
+        DecideBehavior();
     }
+
 
 
     private void GuideToAnimal()
@@ -172,4 +147,46 @@ public class FoxPartner : MonoBehaviour
         }
         return closest;
     }
+
+    private void HandleInvalidAnimal()
+    {
+        if (nearestAnimal != null && !nearestAnimal.gameObject.activeInHierarchy)
+        {
+            nearestAnimal = null;
+            hasStartedGuiding = false;
+        }
+    }
+
+    private void HandleIdleBeforeGuide()
+    {
+        idleTimer += Time.deltaTime;
+        if (idleTimer >= 2f)
+        {
+            hasStartedGuiding = true;
+        }
+        else
+        {
+            agent.ResetPath();
+        }
+    }
+
+    private void DecideBehavior()
+    {
+        if (nearestAnimal == null)
+        {
+            OrbitAroundPlayer();
+            return;
+        }
+
+        float distanceToAnimal = Vector3.Distance(transform.position, nearestAnimal.position);
+        if (distanceToAnimal < orbitDistance + 1f)
+        {
+            OrbitAroundAnimal();
+        }
+        else
+        {
+            GuideToAnimal();
+        }
+    }
+
 }

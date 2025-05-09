@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
 
-public class Bear : AnimalBase, IDamageable
+[RequireComponent(typeof(NavMeshAgent))]
+public class Bear : AnimalBase, IDamageable, IReactive
 {
     [Header("Bear Settings")]
     public float detectRange = 15f;
@@ -18,8 +19,14 @@ public class Bear : AnimalBase, IDamageable
     private float attackTimer = 0f;
     private int currentHealth = 3;
 
-    private enum BearState { Idle, Chase, Combat }
-    private BearState currentState = BearState.Idle;
+    private IState currentState;
+
+    public NavMeshAgent Agent => agent;
+    public Animator Animator => animator;
+    public Transform Player => player;
+    public float AttackRange => attackRange;
+    public float AttackCooldown => attackCooldown;
+    public string[] AttackTriggers => attackTriggers;
 
     private readonly string[] attackTriggers = { "Attack1", "Attack2", "Attack3" };
 
@@ -28,95 +35,22 @@ public class Bear : AnimalBase, IDamageable
         base.Start();
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
         callSound = bearCallSound;
+        SetState(new BearIdleState(this));
     }
 
     protected override void Update()
     {
+        if (isDead || player == null || !hasBeenAttacked) return;
         base.Update();
-        if (isDead || player == null || !hasBeenAttacked) return; // 攻撃されるまで何もしない
-
-        float dist = Vector3.Distance(transform.position, player.position);
-        attackTimer += Time.deltaTime;
-
-        switch (currentState)
-        {
-            case BearState.Idle:
-                SetSpeedParameter(0f);
-                if (dist <= attackRange)
-                {
-                    SetState(BearState.Combat);
-                }
-                break;
-
-            case BearState.Chase:
-                if (dist > attackRange)
-                {
-                    if (!agent.hasPath || agent.destination != player.position)
-                    {
-                        agent.isStopped = false;
-                        agent.SetDestination(player.position);
-                    }
-                    SetSpeedParameter(agent.velocity.magnitude);
-                }
-                else
-                {
-                    SetState(BearState.Combat);
-                }
-                break;
-
-            case BearState.Combat:
-                agent.isStopped = true;
-                SetSpeedParameter(0f);
-
-                if (dist > attackRange)
-                {
-                    SetState(BearState.Chase);
-                }
-                else
-                {
-                    FacePlayer();
-                    TryAttack();
-                }
-                break;
-        }
+        currentState?.Update();
     }
-    private void SetState(BearState newState)
+
+    public void SetState(IState newState)
     {
-        if (currentState == newState) return;
+        currentState?.Exit();
         currentState = newState;
-
-        animator.SetBool("CombatIdle", newState == BearState.Combat);
+        currentState.Enter();
     }
-
-    private void SetSpeedParameter(float velocity)
-    {
-        float speedValue = Mathf.InverseLerp(0f, 3f, velocity) * 2f;
-        animator.SetFloat("Speed", speedValue);
-    }
-
-    private void FacePlayer()
-    {
-        Vector3 dir = (player.position - transform.position).normalized;
-        dir.y = 0f;
-        if (dir != Vector3.zero)
-        {
-            Quaternion targetRot = Quaternion.LookRotation(dir);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, 720f * Time.deltaTime);
-        }
-    }
-
-    private void TryAttack()
-    {
-        if (attackTimer < attackCooldown) return;
-
-        attackTimer = 0f;
-        string trigger = attackTriggers[Random.Range(0, attackTriggers.Length)];
-        animator.SetTrigger(trigger);
-
-        // 遅延攻撃（0.5秒後にダメージ適用）
-        Invoke(nameof(DealDamageToPlayer), 0.5f);
-    }
-
 
     public override void ReactToPlayer(Vector3 playerPosition)
     {
@@ -125,12 +59,17 @@ public class Bear : AnimalBase, IDamageable
             ShowAlertIcon(2.8f);
             hasReacted = true;
         }
-        SetState(BearState.Chase);
+        SetState(new BearChaseState(this));
     }
 
-    public override void OnHit()
+    public void ReactToHit()
     {
-        OnHit(1);
+        if (!hasBeenAttacked)
+        {
+            hasBeenAttacked = true;
+            SetState(new BearChaseState(this));
+            ShowAlertIcon(2.8f);
+        }
     }
 
     public void OnHit(int damage)
@@ -138,13 +77,7 @@ public class Bear : AnimalBase, IDamageable
         if (isDead) return;
 
         currentHealth -= damage;
-
-        if (!hasBeenAttacked)
-        {
-            hasBeenAttacked = true;
-            SetState(BearState.Chase); // 初攻撃時に追跡開始
-            ShowAlertIcon(2.8f); // 初反応
-        }
+        ReactToHit();
 
         if (currentHealth <= 0)
         {
@@ -165,6 +98,29 @@ public class Bear : AnimalBase, IDamageable
         agent.isStopped = true;
         Destroy(gameObject, 2f);
     }
+
+    public void TryAttack()
+    {
+        if (attackTimer < attackCooldown) return;
+
+        attackTimer = 0f;
+        string trigger = attackTriggers[Random.Range(0, attackTriggers.Length)];
+        animator.SetTrigger(trigger);
+
+        Invoke(nameof(DealDamageToPlayer), 0.5f);
+    }
+
+    public void FacePlayer()
+    {
+        Vector3 dir = (player.position - transform.position).normalized;
+        dir.y = 0f;
+        if (dir != Vector3.zero)
+        {
+            Quaternion targetRot = Quaternion.LookRotation(dir);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, 720f * Time.deltaTime);
+        }
+    }
+
     private void DealDamageToPlayer()
     {
         if (player == null) return;
@@ -177,5 +133,4 @@ public class Bear : AnimalBase, IDamageable
             }
         }
     }
-
 }

@@ -99,7 +99,6 @@ public abstract class AnimalBase : MonoBehaviour, IAnimalBehavior
     }
 
     public abstract void ReactToPlayer(Vector3 playerPosition);
-
     public virtual void OnHit()
     {
         if (animator != null)

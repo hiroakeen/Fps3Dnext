@@ -16,14 +16,22 @@ public class Bee : AnimalBase, IHittable
     private Transform player;
     private Vector3 initialPosition;
     private bool isDead = false;
-    private bool hasReacted = false;
+
     private float attackTimer = 0f;
-    private float preAttackWait = 0.5f; // 攻撃前待機時間
-    private float preAttackTimer = 0f;
 
+    private IState currentState;
 
-    private enum BeeState { Idle, Chase, Attack }
-    private BeeState currentState = BeeState.Idle;
+    public NavMeshAgent Agent => agent;
+    public Animator Animator => animator;
+    public Transform Player => player;
+    public Vector3 InitialPosition => initialPosition;
+    public float PreAttackWait => 0.5f;
+
+    protected override void Awake()
+    {
+        agent = GetComponent<NavMeshAgent>();
+        animator = GetComponent<Animator>();
+    }
 
     protected override void Start()
     {
@@ -38,6 +46,8 @@ public class Bee : AnimalBase, IHittable
             audioSource.loop = true;
             audioSource.Play();
         }
+
+        SetState(new BeeIdleState(this));
     }
 
     protected override void Update()
@@ -45,125 +55,20 @@ public class Bee : AnimalBase, IHittable
         if (isDead || player == null) return;
         base.Update();
 
-        float distance = Vector3.Distance(transform.position, player.position);
-        attackTimer += Time.deltaTime;
-
-        switch (currentState)
-        {
-            case BeeState.Idle:
-                PlayAnimation("Idle");
-                ReturnToOrigin();
-
-                if (distance <= detectionRange)
-                {
-                    ReactToPlayer(player.position);
-                }
-                break;
-
-            case BeeState.Chase:
-                if (distance > maxChaseDistance)
-                {
-                    SetState(BeeState.Idle);
-                    hasReacted = false;
-                    return;
-                }
-
-                if (distance <= attackRange)
-                {
-                    SetState(BeeState.Attack);
-                }
-                else
-                {
-                    agent.SetDestination(player.position);
-                    PlayAnimation("Move");
-                }
-                break;
-
-            case BeeState.Attack:
-                if (distance > attackRange)
-                {
-                    SetState(BeeState.Chase);
-                    preAttackTimer = 0f; // ← リセット
-                }
-                else
-                {
-                    // プレイヤーの方向を向く
-                    Vector3 direction = (player.position - transform.position).normalized;
-                    direction.y = 0f;
-                    if (direction != Vector3.zero)
-                    {
-                        Quaternion toRotation = Quaternion.LookRotation(direction);
-                        transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, 720f * Time.deltaTime);
-                    }
-
-                    preAttackTimer += Time.deltaTime;
-
-                    // 攻撃待機時間を超えたら攻撃実行
-                    if (preAttackTimer >= preAttackWait && attackTimer >= attackCooldown)
-                    {
-                        Attack();
-                        attackTimer = 0f;
-                        preAttackTimer = 0f;
-                    }
-                }
-                break;
-
-        }
-
-        animator.SetFloat("Speed", agent.velocity.magnitude);
+        currentState?.Update();
     }
 
-    private void SetState(BeeState newState)
+    public void SetState(IState newState)
     {
+        currentState?.Exit();
         currentState = newState;
-    }
-
-    private void ReturnToOrigin()
-    {
-        float dist = Vector3.Distance(transform.position, initialPosition);
-        if (dist > 0.5f)
-        {
-            agent.SetDestination(initialPosition);
-            PlayAnimation("Move");
-        }
-        else
-        {
-            agent.ResetPath();
-            PlayAnimation("Idle");
-        }
-    }
-
-    private void PlayAnimation(string name)
-    {
-        if (!animator.GetCurrentAnimatorStateInfo(0).IsName(name))
-        {
-            animator.Play(name);
-        }
-    }
-
-    private void Attack()
-    {
-        agent.SetDestination(transform.position);
-        animator.SetTrigger("Attack");
-
-        if (player != null && Vector3.Distance(transform.position, player.position) <= attackRange)
-        {
-            if (player.TryGetComponent<PlayerStatus>(out var health))
-            {
-                health.TakeDamage(1);
-            }
-        }
+        currentState.Enter();
     }
 
     public override void ReactToPlayer(Vector3 playerPosition)
     {
-        if (!hasReacted)
-        {
-            ShowAlertIcon(1.5f);
-            hasReacted = true;
-        }
-
-        SetState(BeeState.Chase);
+        ShowAlertIcon(1.5f);
+        SetState(new BeeChaseState(this));
     }
 
     public override void OnHit()
@@ -185,5 +90,17 @@ public class Bee : AnimalBase, IHittable
         animator.SetTrigger("Die");
         agent.isStopped = true;
         Destroy(gameObject, 1.2f);
+    }
+}
+
+
+public static class BeeExtensions
+{
+    public static void PlayAnimation(this Bee bee, string name)
+    {
+        if (!bee.Animator.GetCurrentAnimatorStateInfo(0).IsName(name))
+        {
+            bee.Animator.Play(name);
+        }
     }
 }
