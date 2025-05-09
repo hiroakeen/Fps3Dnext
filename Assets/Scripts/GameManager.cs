@@ -60,6 +60,7 @@ public class GameManager : MonoBehaviour
 
 
 
+
 public void GameOver()
 {
     isGameOver = true;
@@ -88,6 +89,7 @@ public void GameOver()
 
     SceneManager.LoadScene("GameOver");
 }
+
 
 
 
