@@ -11,13 +11,12 @@ public class WorldWarpZone : MonoBehaviour
         warpBounds = GetComponent<BoxCollider>();
         warpBounds.isTrigger = true;
 
-        center = warpBounds.center + transform.position;
-        size = warpBounds.size;
+        center = warpBounds.bounds.center;
+        size = warpBounds.bounds.size;
     }
 
     void OnTriggerExit(Collider other)
     {
-        // タグでフィルター
         if (!other.CompareTag("Player") && !other.CompareTag("Animal"))
             return;
 
@@ -52,5 +51,4 @@ public class WorldWarpZone : MonoBehaviour
             t.position = pos;
         }
     }
-
 }

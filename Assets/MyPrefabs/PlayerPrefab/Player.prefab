@@ -702,7 +702,7 @@ Transform:
   m_GameObject: {fileID: 1158787395639030090}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1}
+  m_LocalPosition: {x: 0, y: -0.015, z: 1.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2827,14 +2827,14 @@ GameObject:
   - component: {fileID: 1771922362511324999}
   - component: {fileID: 6391466943410816323}
   - component: {fileID: 8215104572002770909}
-  - component: {fileID: 7958105522330403615}
   - component: {fileID: 8842836259808051015}
   - component: {fileID: 8116432346213266887}
   - component: {fileID: 7858713509113868269}
   - component: {fileID: 8422605377930215329}
   - component: {fileID: 8168839321792176404}
+  - component: {fileID: 3763519560767998741}
   m_Layer: 3
-  m_Name: Player 1
+  m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3011,8 +3011,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 02d534e1e22780a418556be9bfdbeb1c, type: 3}
-  m_Resource: {fileID: 8300000, guid: 02d534e1e22780a418556be9bfdbeb1c, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 770e43875129c73428dab3f67e9f493f, type: 3}
+  m_Resource: {fileID: 8300000, guid: 770e43875129c73428dab3f67e9f493f, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.5
   m_Pitch: 3
@@ -3108,10 +3108,10 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 6da235e2573048249bcbe608f984ff48, type: 3}
-  m_Resource: {fileID: 8300000, guid: 6da235e2573048249bcbe608f984ff48, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 613745e4b26364f46a3c02298c7e9b24, type: 3}
+  m_Resource: {fileID: 8300000, guid: 613745e4b26364f46a3c02298c7e9b24, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.3
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -3205,8 +3205,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 699b912cc46ba4f4fad8fa38e997e232, type: 3}
-  m_Resource: {fileID: 8300000, guid: 699b912cc46ba4f4fad8fa38e997e232, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 93bcaabb6f7b1234c83ca065223b7a19, type: 3}
+  m_Resource: {fileID: 8300000, guid: 93bcaabb6f7b1234c83ca065223b7a19, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -3307,20 +3307,7 @@ MonoBehaviour:
   walkSpeed: 5
   runMultiplier: 2
   footstepInterval: 0.5
---- !u!114 &7958105522330403615
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4788685900146799164}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ab4b9eb7eb2d344c80ada00824af5cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cameraTransform: {fileID: 4037458141670316572}
-  mouseSensitivity: 1
+  leftJoystick: {fileID: 0}
 --- !u!114 &8842836259808051015
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3337,6 +3324,7 @@ MonoBehaviour:
   shootPower: 50
   shootCooldown: 1
   arrowPosition: {fileID: 740885723721702503}
+  reticleUI: {fileID: 0}
   mainCamera: {fileID: 1186604362752890416}
 --- !u!114 &8116432346213266887
 MonoBehaviour:
@@ -3391,10 +3379,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3461c40a758a5c04bbfd3911f713bdb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 2
+  maxHealth: 3
   maxHunger: 100
   hungerDecreaseInterval: 3
-  hungerDecreaseAmount: 1
+  hungerDecreaseAmount: 5
+  bloodEffect: {fileID: 0}
+--- !u!114 &3763519560767998741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4788685900146799164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f116b4fb520915b4c9903b4aeea71a43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraTransform: {fileID: 4037458141670316572}
+  playerBody: {fileID: 1842671774471577803}
+  characterController: {fileID: 1821937936453790524}
+  mouseSensitivity: 5
+  mainCamera: {fileID: 1186604362752890416}
+  normalFOV: 60
+  aimFOV: 40
+  zoomSpeed: 20
+  isAiming: 0
+  bobSpeed: 14
+  bobAmount: 0.05
 --- !u!1 &4978998039355805809
 GameObject:
   m_ObjectHideFlags: 0
@@ -4667,7 +4679,6 @@ GameObject:
   - component: {fileID: 1186604362752890416}
   - component: {fileID: 947532758053240775}
   - component: {fileID: 6721243238288186259}
-  - component: {fileID: 7831776845514683613}
   m_Layer: 3
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -4795,23 +4806,6 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
---- !u!114 &7831776845514683613
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6841795854901699420}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29e1c32fc0f86fe46a445573faf16036, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _maincamera: {fileID: 1186604362752890416}
-  _characterController: {fileID: 1821937936453790524}
-  mouseSensitivity: 2
-  playerBody: {fileID: 1842671774471577803}
-  isAiming: 0
 --- !u!1 &6873940873364737264
 GameObject:
   m_ObjectHideFlags: 0

@@ -78,9 +78,14 @@ public class PlayerStatus : MonoBehaviour
         Hunger = Mathf.Clamp(Hunger + amount, 0f, maxHunger);
     }
 
-    private void Die()
+    void Die()
     {
         IsDead = true;
-        GameManager.Instance?.GameOver();
+
+        int finalScore = Mathf.FloorToInt(GameManager.Instance.SurvivalTime);
+        FindAnyObjectByType<UnityroomRankingUploader>()?.SendScore(finalScore);
+
+        GameManager.Instance.GameOver();
     }
+
 }
