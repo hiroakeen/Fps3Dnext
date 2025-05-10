@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>README.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="hunt-logic">Hunt Logic</h1>
+<h2 id="%E6%A6%82%E8%A6%81">概要</h2>
+<ul>
+<li>1人称視点のシューティングゲーム（FPS)です。プレイヤーは、時間経過で減少する体力と、敵からの攻撃で減少するHPの２つを管理しながら、できる限り長く生き延びるサバイバル要素も含めています。</li>
+<li>登場キャラクターはプレイヤーの他に、パートナーのキツネ、見つけると逃げるウサギ、攻撃してくるハチ、こちらから攻撃したら反撃してくる熊、がいます。</li>
+<li>https://unityroom.com/games/hiroakeen_fps_1
+こちらのUnityRoomでは生存時間によるランキングにも対応しています。</li>
+<li>https://hiroakeen.itch.io/hunt-logic
+こちらのitch.ioではWindowsダウンロード版も配信しています。</li>
+</ul>
+<h2 id="%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95">操作方法</h2>
+<ul>
+<li>プレイヤーの移動：WASDキー　　視点の移動：マウス移動</li>
+</ul>
+<img src="https://private-user-images.githubusercontent.com/191756413/442360814-616bbb38-2e25-440e-9db9-0404c5aa01ca.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDY4NDIxMzMsIm5iZiI6MTc0Njg0MTgzMywicGF0aCI6Ii8xOTE3NTY0MTMvNDQyMzYwODE0LTYxNmJiYjM4LTJlMjUtNDQwZS05ZGI5LTA0MDRjNWFhMDFjYS5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjUwNTEwJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI1MDUxMFQwMTUwMzNaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT03MWEwZWU2YjA5YWUwZmQ1MGViMWM3NmNlNWZkNTgyZGVmN2FhZjdiZGY1ZGU5ZWMzMmVjMjI2MDU1ZGE0MzJjJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.f9nTtbJvWib8FkKTSSt3IBTBC_nd-svwLXACGspODUc"  width="500">
+<ul>
+<li>弓を構える：右クリック長押し　　矢を放つ：弓を構えた状態で左クリック</li>
+</ul>
+<img src ="https://private-user-images.githubusercontent.com/191756413/442361175-37fd4e77-06d8-43ff-9675-03e621b0ece9.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDY4NDI0NzgsIm5iZiI6MTc0Njg0MjE3OCwicGF0aCI6Ii8xOTE3NTY0MTMvNDQyMzYxMTc1LTM3ZmQ0ZTc3LTA2ZDgtNDNmZi05Njc1LTAzZTYyMWIwZWNlOS5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjUwNTEwJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI1MDUxMFQwMTU2MThaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT1iNDJjMjlkMzI1MmIzYWY5MjdjMWIzOTI3YTQ3ODQ5NGFmZmFiNmJhN2U0YTUyZTZmYjZhY2NlYzBjNGY2MDQzJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.M7-HmQt0m_SZAftfSxob_D0Xz1RBhXn82GD0AiLeTmg" width = "500">
+<ul>
+<li>カメラ感度の調整：スペースキーでメニュー画面から設定</li>
+</ul>
+<img src = "https://private-user-images.githubusercontent.com/191756413/442361645-8c8dee14-859f-4f3f-a68a-600a4f46880e.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDY4NDMwMDYsIm5iZiI6MTc0Njg0MjcwNiwicGF0aCI6Ii8xOTE3NTY0MTMvNDQyMzYxNjQ1LThjOGRlZTE0LTg1OWYtNGYzZi1hNjhhLTYwMGE0ZjQ2ODgwZS5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjUwNTEwJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI1MDUxMFQwMjA1MDZaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT01NjdiYzVhNTU0MzkzMjMzN2MzNDk3NGUyZGZjZTRlOWYzYjFjNjc0ODljODgzOGEzZmNmN2RmMTUzMjZkNDcxJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.1GDhHhnvIAZUCjpZoeZxNEa9ZhPZWGl7qoFR4xCUEOg" width = "200">
+<ul>
+<li>タイトルシーン、ゲームオーバーシーンはマウスクリックでボタンを選択</li>
+</ul>
+<p><img src = "https://private-user-images.githubusercontent.com/191756413/442361774-48159906-9db8-4e17-84b2-2dc07cda3798.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDY4NDMxNzgsIm5iZiI6MTc0Njg0Mjg3OCwicGF0aCI6Ii8xOTE3NTY0MTMvNDQyMzYxNzc0LTQ4MTU5OTA2LTlkYjgtNGUxNy04NGIyLTJkYzA3Y2RhMzc5OC5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjUwNTEwJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI1MDUxMFQwMjA3NThaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT04N2ZmMDIxYjNkNmFjMjk4MjQyY2NiZTc4ZGZkZWU4NGEzZDQ4MTgwZGViY2U5MjZhY2RhZjlkMGI0NWI4YzFmJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.D-osB_ghw55poNWj3N4W-Y2gRNEtPBU2l6mEs254kTQ" width = "200"> <img src = "https://private-user-images.githubusercontent.com/191756413/442361824-573452fc-6788-4079-8ade-156be0f8368c.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDY4NDMyMTEsIm5iZiI6MTc0Njg0MjkxMSwicGF0aCI6Ii8xOTE3NTY0MTMvNDQyMzYxODI0LTU3MzQ1MmZjLTY3ODgtNDA3OS04YWRlLTE1NmJlMGY4MzY4Yy5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjUwNTEwJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI1MDUxMFQwMjA4MzFaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT05OWY5NDY0ZDgwMTI1OTY5ODAwMzJhOTk0N2UwOTQxODNmYzhjMWQ0MzVjYjJmNzRlMjUwMzE1N2JlNjAwNDRjJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.ZxFieUD9atJd4hB9da5RV_wgRyPQVVae65mHuj61_bY" width = "200"></p>
+<ul>
+<li>ゲーム終了：エスケープキー</li>
+</ul>
+<h2 id="%E5%B7%A5%E5%A4%AB%E3%81%97%E3%81%9F%E7%82%B9">工夫した点</h2>
+<ul>
+<li>エネミーがプレイヤーに自動で近づく実装を応用し、パートナーが案内してくれるナビゲーション機能へ改変した。</li>
+<li>矢は重力をかけたかったためRaycastHitではなくInstantiateした。</li>
+<li>弓をひく角度などリアルさが出やすいように調節、連射できない仕様やアニメーションを長めに設定した。</li>
+<li>それぞれの動物ごとに挙動を変化。熊のみBodyとHeadで与えるダメージ量が変化。</li>
+<li>マップを一定地点まで進むと反対側へ繋がり、無限に広がっているように見せることでマップ容量負荷を軽減。</li>
+<li>FogとCameraのClipping Planes Farを小さくし、視界をあえて狭めることで探索感を得られるようにした。</li>
+<li>ダメージによるマスク描画により緊迫感を上げた。</li>
+</ul>
+<h2 id="%E8%8B%A6%E5%8A%B4%E3%81%97%E3%81%9F%E7%82%B9">苦労した点</h2>
+<ul>
+<li>矢が正面へ飛ばない問題
+<ul>
+<li>Instantiate位置からCanvasをScreenSpace-Cameraに設定(プレイヤーの視点前方にカメラCanvasが表示される）</li>
+<li>WorldToScreenPointやScreenPointToRayを使い、目の前にあるCameraCanvasのレティクルイメージ画像に向かって打つ方式へ。</li>
+<li>矢の方向確認はDebug.DrawRayで目視しながら調整した。</li>
+</ul>
+</li>
+<li>プレイヤーの影（全身）とアニメーションが連動しているが、視界上の腕（腕のみ）とキャラクターの腕が被る問題。
+<ul>
+<li>キャラクターモデルを影のみ描画（Cast Shadow）で解決。</li>
+</ul>
+</li>
+</ul>
+<h2 id="%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0%E6%8A%80%E8%A1%93%E6%A9%9F%E8%83%BD%E3%83%BB%E3%83%87%E3%82%B6%E3%82%A4%E3%83%B3">プログラミング技術（機能・デザイン）</h2>
+<ul>
+<li>SOLIDの原則に基づいた設計を意識。
+<ul>
+<li>各クラスを単一責任になるよう分離。</li>
+<li>各動物ごとの挙動はIStateを用いたSTATEパターンを導入し、継承した個別スクリプトに分割した。</li>
+<li>シングルトンによりExit処理、どのシーンでもエスケープで終了可。</li>
+</ul>
+</li>
+<li>VisualStudioの分析ツールを用いてコードメトリクスを計算、保守容易性など可視化しながら適宜スクリプトを調整した。</li>
+<li>DoTweenでUIアニメーションを作成。</li>
+<li>オクルージョンカリングをオンにして描画負荷を軽減。</li>
+<li>動物ごとのオーディオを３Dで設定し、プレイヤーとの距離により音量が変化。</li>
+<li>terrainによる樹木の自動配置、影の描画。</li>
+</ul>
+<h2 id="%E5%88%B6%E4%BD%9C%E7%B5%8C%E7%B7%AF%E9%96%8B%E7%99%BA%E3%82%B9%E3%82%B1%E3%82%B8%E3%83%A5%E3%83%BC%E3%83%AB">制作経緯（開発スケジュール）</h2>
+<ul>
+<li>初日：企画
+<ul>
+<li>自分が好きなジャンル：FPS＋狩り</li>
+<li>ミニゲームサイズ：登場キャラクター少</li>
+<li>初見でもわかりやすく：ナビゲーション</li>
+<li>繰り返し遊べる：サバイバル要素</li>
+<li>ターゲットプラットフォーム：WebGL</li>
+<li>Webにした理由：テストプレイが容易、配布しやすいなど、ポートフォリオに向いていると思ったから。</li>
+</ul>
+</li>
+<li>参考にしたゲーム（採用したこと）
+<ul>
+<li>Apex Legends（FPS、弓矢）</li>
+<li>Minecraft（サバイバル要素）</li>
+<li>Monster Hunter: World（おともキャラ、狩り）</li>
+<li>ゼルダの伝説 時のオカリナ（ナビゲーション機能）</li>
+<li>スターフォックス64（無限マップ、Fog）</li>
+<li>CallOfDuty BlackOps（ダメージマスク描画、Head Bob設定）</li>
+</ul>
+</li>
+<li>２日目：基礎構成
+<ul>
+<li>プレイヤー、カメラ、ナビゲーションなどのスクリプト</li>
+<li>アニメーション、アセットや素材集めなど</li>
+<li>terrain制作</li>
+</ul>
+</li>
+<li>３日目：衝突判定、トリガー判定、ダメージ処理などの接続関係、矢の射出関係</li>
+<li>４日目：オーディオ、テストプレイ、バグ修正</li>
+<li>５日目：最終調整、UnityRoom（ランキング対応）やitch.ioに投稿</li>
+<li>６日目以降：修正＆アップデートを継続</li>
+</ul>
+<h2 id="%E8%AA%B2%E9%A1%8C%E7%82%B9">課題点</h2>
+<ul>
+<li>プロファイラーを活用して負荷の高いところをさらに改善</li>
+<li>より疎結合なスクリプト構成を目指す</li>
+<li>オリジナルというより既存のアイデアを組み合わせたので、オリジナル要素を増やす</li>
+<li>オブジェクト指向やデザインパターンをより効率よく、拡張性を高く維持できるよう訓練していく</li>
+</ul>
+<h2 id="%E4%BB%8A%E5%BE%8C%E5%AF%BE%E5%BF%9C%E3%81%97%E3%81%9F%E3%81%84%E3%81%93%E3%81%A8">今後対応したいこと</h2>
+<ul>
+<li>現状はあまり長時間プレイを想定していないため、もしInstantiate負荷が増えるならオブジェクトプールの採用を検討したい。</li>
+<li>アセット購入ではなく自作してみたい（３Dモデリング等）</li>
+</ul>
+<h2 id="%E3%81%BE%E3%81%A8%E3%82%81">まとめ</h2>
+<ul>
+<li>人生初の自作ゲームをリリースまで出来た。</li>
+<li>ひととおりの流れを経験し、すべてを自分で実装する大変さや、スケジュール管理も想定外のことばかりだった。</li>
+<li>今後はターゲットプラットフォームをスマホにも拡大したり、ゲームジャムに参加したり、スキル向上にも努めていきたい。</li>
+</ul>
+<h2 id="%E4%BD%BF%E7%94%A8%E7%B4%A0%E6%9D%90">使用素材</h2>
+<ul>
+<li>Game Weapon Icons Package</li>
+<li>Blood splatter decal package</li>
+<li>Ten Power-Ups</li>
+<li>Fantasy Bee</li>
+<li>White Rabbit</li>
+<li>FREE Stylized Bear - RPG Forest Animal</li>
+<li>LowPoly Survival Character Rio</li>
+<li>Toon Fox</li>
+<li>Arms&amp;HandsHumanoidRig</li>
+<li>RPG_Animations - Bow</li>
+<li>Anime Natural Environment</li>
+<li>Simple Gems and Items Ultimate Animated Customizable Pack</li>
+<li>DOTween (HOTween v2)</li>
+<li>Sleek essential UI pack</li>
+<li>Free Meat and Skin Icons</li>
+</ul>
+<h2 id="%E5%8F%82%E8%80%83%E5%9B%B3%E6%9B%B8">参考図書</h2>
+<ul>
+<li>Unity公式eBook</li>
+<li>作って学べる　Unity本格入門　［Unity 6対応版］賀好 昭仁 著</li>
+<li>Unityの教科書 Unity 6完全対応版 北村愛実 著</li>
+<li>Unityゲーム プログラミング・バイブル 2nd Generation 著者：森 哲哉、布留川 英一、西森 丈俊、車谷 勇人、一條 貴彰、打田 恭平、轟 昂、室星 亮太、井本 大登、細田 翔、西岡 陽、平井 佑樹、コポコポ、すいみん、Maruton、karukaru、ハダシA、notargs、EIKI`、おれんじりりぃ、黒河 優介、中村 優一、藤岡 裕吾</li>
+<li>Unity 3Dゲーム開発ではじめるC#プログラミング Harrison Ferrone　著/吉川 邦夫　訳</li>
+<li>新・標準プログラマーズライブラリ なるほどなっとく C#入門 出井秀行　著</li>
+<li>確かな力が身につく C#「超」入門 第3版 北村愛実 著</li>
+<li>独習C# 第5版 山田 祥寛 著</li>
+<li>Game Programming Patterns ソフトウェア開発の問題解決メニュー Robert Nystrom　著/武舎 広幸　監修/阿部 和也　訳/上西 昌弘　訳</li>
+<li>オブジェクト設計スタイルガイド　Matthias Noback 著/田中 裕一 訳</li>
+</ul>
+
+</body>
+</html>
