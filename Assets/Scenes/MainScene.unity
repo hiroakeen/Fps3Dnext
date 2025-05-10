@@ -413,13 +413,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animalTypes:
   - prefab: {fileID: 64369721459256376, guid: 6aaa8ae5b9c3a714d8a81869a6033339, type: 3}
-    spawnWeight: 6
+    spawnWeight: 5
     uniqueSpawn: 0
   - prefab: {fileID: 1214733931788947106, guid: 87c52f95553e09a4da89453e6bca918d, type: 3}
     spawnWeight: 3
     uniqueSpawn: 0
   - prefab: {fileID: 1714822879982793560, guid: ae262b2feb8c6c541bae2e90ffb91f6d, type: 3}
-    spawnWeight: 1
+    spawnWeight: 2
     uniqueSpawn: 0
   spawnInterval: 5
   minSpawnDistanceFromPlayer: 20
