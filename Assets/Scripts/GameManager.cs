@@ -81,7 +81,7 @@ private IEnumerator CountdownStart()
         }
 
         countdownUI?.ShowStart();
-        yield return new WaitForSeconds(1f); // START表示が消えるまで待機
+        yield return new WaitForSeconds(1f);
 
         hasStarted = true;
     }
@@ -100,8 +100,11 @@ private IEnumerator CountdownStart()
         {
             countdownUI = FindAnyObjectByType<CountdownUI>();
             ResetGameState();
-            StartCoroutine(CountdownStart()); // �J�E���g�_�E����ĊJ
-            ResetGameState(); // ← ここを必ず呼び出す
+            StartCoroutine(CountdownStart());
+        }
+        else if (scene.name == "Title")
+        {
+            ResetGameState();
         }
     }
 
