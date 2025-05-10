@@ -3,6 +3,8 @@
 ## 概要
 - 1人称視点のシューティングゲーム（FPS)です。プレイヤーは、時間経過で減少する体力と、敵からの攻撃で減少するHPの２つを管理しながら、できる限り長く生き延びるサバイバル要素も含めています。
 - 登場キャラクターはプレイヤーの他に、パートナーのキツネ、見つけると逃げるウサギ、攻撃してくるハチ、こちらから攻撃したら反撃してくる熊、がいます。
+- https://play.unity.com/en/games/adc3a287-e58a-4630-bb71-c21114e501e7/webgl-builds
+  こちらのUnityPlayroomでプレイができます。
 - https://unityroom.com/games/hiroakeen_fps_1
   こちらのUnityRoomでは生存時間によるランキングにも対応しています。
 - https://hiroakeen.itch.io/hunt-logic
