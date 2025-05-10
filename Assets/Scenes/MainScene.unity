@@ -419,7 +419,7 @@ MonoBehaviour:
     spawnWeight: 3
     uniqueSpawn: 0
   - prefab: {fileID: 1714822879982793560, guid: ae262b2feb8c6c541bae2e90ffb91f6d, type: 3}
-    spawnWeight: 10
+    spawnWeight: 1
     uniqueSpawn: 0
   spawnInterval: 5
   minSpawnDistanceFromPlayer: 20
